@@ -1,0 +1,8 @@
+{
+  "name": "BeBride-Server",
+  "version": "1.0.0",
+  "description": "Serviço da parte Administrativa da BeBride",
+  "main": "server.js",
+  "author": "Miguel Duque Filho",
+  "license": "MIT"
+}
