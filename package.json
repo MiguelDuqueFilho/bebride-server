@@ -4,5 +4,18 @@
   "description": "Serviço da parte Administrativa da BeBride",
   "main": "server.js",
   "author": "Miguel Duque Filho",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "start": "nodemon src/server.js",
+    "dev": "nodemon src/server.js --ignore __tests__",
+    "pretest": "NODE_ENV=test sequelize db:migrate",
+    "test": "NODE_ENV=test jest",
+    "posttest": "NODE_ENV=test sequelize db:migrate:undo:all"
+  },
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "knex": "^0.20.7",
+    "mysql2": "^2.1.0"
+  }
 }
