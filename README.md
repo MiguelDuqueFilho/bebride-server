@@ -33,3 +33,5 @@ seed:run [options] Run seed files.
 Created ./knexfile.js
 
 yarn knex migrate:make create_table_users
+
+yarn knex migrate:latest

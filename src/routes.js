@@ -1,5 +1,5 @@
 module.exports = app => {
-  app.route("/users").get(app.src.api.user.save);
+  app.route("/users").get(app.src.api.user.get);
 };
 
 // const routes = require("express").Router();

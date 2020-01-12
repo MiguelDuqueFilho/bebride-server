@@ -8,9 +8,10 @@
   "scripts": {
     "start": "NODE_ENV=development node -r dotenv/config src/server.js",
     "dev": "NODE_ENV=development nodemon -r dotenv/config src/server.js --ignore __tests__",
-    "production": "NODE_ENV=production nodemon src/server.js",
-    "migrate": "NODE_ENV=development  knex migrate:up",
-    "unmigrate": "NODE_ENV=development knex migrate:down",
+    "production": "NODE_ENV=production node src/server.js",
+    "migrate": "NODE_ENV=development  knex migrate:latest",
+    "unmigrate": "NODE_ENV=development knex migrate:rollback",
+    "seed": "NODE_ENV=development knex seed:run",
     "test": "NODE_ENV=test jest",
     "pretest": "NODE_ENV=test sequelize db:migrate",
     "posttest": "NODE_ENV=test sequelize db:migrate:undo:all"
