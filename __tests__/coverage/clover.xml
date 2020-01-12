@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1578868609047" clover="3.2.0">
+  <project timestamp="1578868609048" name="All files">
+    <metrics statements="36" coveredstatements="31" conditionals="2" coveredconditionals="0" methods="11" coveredmethods="9" elements="49" coveredelements="40" complexity="0" loc="36" ncloc="36" packages="3" files="7" classes="7"/>
+    <package name="src">
+      <metrics statements="19" coveredstatements="15" conditionals="2" coveredconditionals="0" methods="5" coveredmethods="4"/>
+      <file name="app.js" path="/Users/miguelduquefilho/Desktop/BeBride-Admin/BeBride-Server/src/app.js">
+        <metrics statements="12" coveredstatements="12" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="3"/>
+        <line num="1" count="1" type="stmt"/>
+        <line num="2" count="1" type="stmt"/>
+        <line num="3" count="1" type="stmt"/>
+        <line num="4" count="1" type="stmt"/>
+        <line num="8" count="1" type="stmt"/>
+        <line num="9" count="1" type="stmt"/>
+        <line num="10" count="1" type="stmt"/>
+        <line num="11" count="1" type="stmt"/>
+        <line num="15" count="1" type="stmt"/>
+        <line num="16" count="1" type="stmt"/>
+        <line num="20" count="1" type="stmt"/>
+        <line num="27" count="1" type="stmt"/>
+      </file>
+      <file name="routes.js" path="/Users/miguelduquefilho/Desktop/BeBride-Admin/BeBride-Server/src/routes.js">
+        <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <line num="1" count="1" type="stmt"/>
+        <line num="2" count="1" type="stmt"/>
+        <line num="3" count="1" type="stmt"/>
+      </file>
+      <file name="server.js" path="/Users/miguelduquefilho/Desktop/BeBride-Admin/BeBride-Server/src/server.js">
+        <metrics statements="4" coveredstatements="0" conditionals="2" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="1" count="0" type="stmt"/>
+        <line num="2" count="0" type="stmt"/>
+        <line num="4" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="5" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.api">
+      <metrics statements="13" coveredstatements="12" conditionals="0" coveredconditionals="0" methods="6" coveredmethods="5"/>
+      <file name="middlewares.js" path="/Users/miguelduquefilho/Desktop/BeBride-Admin/BeBride-Server/src/api/middlewares.js">
+        <metrics statements="7" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
+        <line num="1" count="1" type="stmt"/>
+        <line num="2" count="1" type="stmt"/>
+        <line num="3" count="1" type="stmt"/>
+        <line num="5" count="1" type="stmt"/>
+        <line num="16" count="1" type="stmt"/>
+        <line num="20" count="1" type="stmt"/>
+        <line num="23" count="1" type="stmt"/>
+      </file>
+      <file name="user.js" path="/Users/miguelduquefilho/Desktop/BeBride-Admin/BeBride-Server/src/api/user.js">
+        <metrics statements="6" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="3"/>
+        <line num="1" count="1" type="stmt"/>
+        <line num="2" count="1" type="stmt"/>
+        <line num="3" count="1" type="stmt"/>
+        <line num="7" count="1" type="stmt"/>
+        <line num="8" count="0" type="stmt"/>
+        <line num="11" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.config">
+      <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <file name="config.js" path="/Users/miguelduquefilho/Desktop/BeBride-Admin/BeBride-Server/src/config/config.js">
+        <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="1" type="stmt"/>
+      </file>
+      <file name="db.js" path="/Users/miguelduquefilho/Desktop/BeBride-Admin/BeBride-Server/src/config/db.js">
+        <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="1" type="stmt"/>
+        <line num="2" count="1" type="stmt"/>
+        <line num="4" count="1" type="stmt"/>
+      </file>
+    </package>
+  </project>
+</coverage>
