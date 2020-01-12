@@ -1,4 +1,8 @@
-const routes = require("express").Router();
+module.exports = app => {
+  app.route("/users").get(app.src.api.user.save);
+};
+
+// const routes = require("express").Router();
 
 // const authMiddleware = require("./app/middleware/auth");
 
@@ -8,8 +12,8 @@ const routes = require("express").Router();
 
 // routes.use(authMiddleware);
 
-routes.get("/dashboard", (req, res) => {
-  return res.status(200).send();
-});
+// routes.get("/dashboard", (req, res) => {
+//   return res.status(200).send("dashboard");
+// });
 
-module.exports = routes;
+// module.exports = routes;

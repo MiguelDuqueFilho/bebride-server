@@ -6,16 +6,23 @@
   "author": "Miguel Duque Filho",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon src/server.js",
-    "dev": "nodemon src/server.js --ignore __tests__",
-    "pretest": "NODE_ENV=test sequelize db:migrate",
+    "start": "NODE_ENV=development node -r dotenv/config src/server.js",
+    "dev": "NODE_ENV=development nodemon -r dotenv/config src/server.js --ignore __tests__",
+    "production": "NODE_ENV=production nodemon src/server.js",
+    "migrate": "NODE_ENV=development  knex migrate:up",
+    "unmigrate": "NODE_ENV=development knex migrate:down",
     "test": "NODE_ENV=test jest",
+    "pretest": "NODE_ENV=test sequelize db:migrate",
     "posttest": "NODE_ENV=test sequelize db:migrate:undo:all"
   },
   "dependencies": {
-    "dotenv": "^8.2.0",
+    "consign": "^0.1.6",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "knex": "^0.20.7",
     "mysql2": "^2.1.0"
+  },
+  "devDependencies": {
+    "dotenv": "^8.2.0"
   }
 }
