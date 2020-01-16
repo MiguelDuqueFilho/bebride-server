@@ -17,21 +17,11 @@ git remote add origin https://github.com/MiguelDuqueFilho/bebride-server.git
 git commit -m "first commit"
 git push -u origin master
 
-comandos knex:
-yarn knex init
-Commands:
-init [options] Create a fresh knexfile.
-migrate:make [options] <name> Create a named migration file.
-migrate:latest [options] Run all migrations that have not yet been run.
-migrate:up [<name>] Run the next or the specified migration that has not yet been run.
-migrate:rollback [options] Rollback the last batch of migrations performed.
-migrate:down [<name>] Undo the last or the specified migration that was already run.
-migrate:currentVersion View the current version for the migration.
-migrate:list|migrate:status List all migrations files with status.
-seed:make [options] <name> Create a named seed file.
-seed:run [options] Run seed files.
-Created ./knexfile.js
-
-yarn knex migrate:make create_table_users
-
-yarn knex migrate:latest
+comandos sequelize:
+yarn sequelize init
+yarn sequelize db:migration:create --name=create-users
+yarn sequelize db:migrate
+yarn sequelize db:migrate:undo
+yarn sequelize seed:generate --name carga-inicial-users
+yarn sequelize db:seed:all 
+yarn sequelize db:seed:undo:all 

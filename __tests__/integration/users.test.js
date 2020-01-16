@@ -1,5 +1,5 @@
 const request = require("supertest");
-const app = require("../../src/app");
+const app = require("../../src/app.js");
 
 describe("Test jest", () => {
   it("should sum two numbers", () => {
@@ -14,6 +14,8 @@ describe("Users consult", () => {
     const response = await request(app)
       .get("/users")
       .send();
+
+    console.log(response.error.text);
     expect(response.status).toBe(200);
   });
 });

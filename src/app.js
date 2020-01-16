@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const consign = require("consign");
-const db = require("./config/db");
+const db = require("./app/models");
 
 class AppController {
   constructor() {

@@ -1,5 +1,5 @@
 {
-  "name": "BeBride-Server",
+  "name": "bebride-server",
   "version": "1.0.0",
   "description": "Serviço da parte Administrativa da BeBride",
   "main": "server.js",
@@ -8,22 +8,22 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "NODE_ENV=development nodemon -r dotenv/config src/server.js --ignore __tests__",
-    "migrate": "NODE_ENV=development  knex migrate:latest",
+    "migrate": "NODE_ENV=development sequelize db:migrate",
     "unmigrate": "NODE_ENV=development knex migrate:rollback",
     "seed": "NODE_ENV=development knex seed:run",
-    "test": "NODE_ENV=development jest --detectOpenHandles"
+    "test": "NODE_ENV=development jest "
   },
   "dependencies": {
     "consign": "^0.1.6",
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "knex": "^0.20.7",
-    "knex-stringcase": "^1.3.0",
-    "mysql2": "^2.1.0"
+    "mysql2": "^2.1.0",
+    "sequelize": "^5.21.3"
   },
   "devDependencies": {
     "dotenv": "^8.2.0",
     "jest": "^24.9.0",
+    "sequelize-cli": "^5.5.1",
     "supertest": "^4.0.2"
   }
 }
