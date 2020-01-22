@@ -1,4 +1,19 @@
-require("dotenv").config();
+if (process.env.NODE_ENV !== "production") {
+  switch (process.env.NODE_ENV) {
+    case "development":
+      require("dotenv").config({ path: ".env" });
+      break;
+    case "remote":
+      require("dotenv").config({ path: ".env.remote" });
+      break;
+    case "test":
+      require("dotenv").config({ path: ".env.test" });
+      break;
+    default:
+      require("dotenv").config({ path: ".env" });
+      break;
+  }
+}
 
 module.exports = {
   host: process.env.DB_HOST,
@@ -6,7 +21,8 @@ module.exports = {
   database: process.env.DB_NAME,
   username: process.env.DB_USER,
   password: process.env.DB_PASS,
-  dialect: "mysql",
+  dialect: process.env.DIALECT || "mysql",
+  storage: "./__tests__/databese.sqlite",
   logging: false,
   define: {
     timestamps: true,

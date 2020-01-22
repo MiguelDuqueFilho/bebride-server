@@ -7,18 +7,30 @@
   "license": "MIT",
   "scripts": {
     "start": "node src/server.js",
-    "dev": "NODE_ENV=development nodemon -r dotenv/config src/server.js --ignore __tests__",
+    "dev": "NODE_ENV=development nodemon src/server.js --ignore __tests__",
     "migrate": "NODE_ENV=development sequelize db:migrate",
     "unmigrate": "NODE_ENV=development knex migrate:rollback",
     "seed": "NODE_ENV=development knex seed:run",
-    "test": "NODE_ENV=development jest "
+    "devr": "NODE_ENV=remote nodemon src/server.js --ignore __tests__",
+    "migrater": "NODE_ENV=remote sequelize db:migrate",
+    "unmigrater": "NODE_ENV=remote knex migrate:rollback",
+    "seedr": "NODE_ENV=remote knex seed:run",
+    "pretest": "NODE_ENV=test sequelize db:migrate",
+    "test": "NODE_ENV=test jest",
+    "posttest": "NODE_ENV=test sequelize db:migrate:undo:all",
+    "devtest": "NODE_ENV=test nodemon src/server.js --ignore __tests__"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "consign": "^0.1.6",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "factory-girl": "^5.0.4",
+    "faker": "^4.1.0",
+    "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.1.0",
-    "sequelize": "^5.21.3"
+    "sequelize": "^5.21.3",
+    "sqlite3": "^4.1.1"
   },
   "devDependencies": {
     "dotenv": "^8.2.0",

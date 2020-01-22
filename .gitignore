@@ -1,2 +1,5 @@
 .env
+.env.remote
+.env.test
 node_modules
+
