@@ -1,5 +1,5 @@
-const app = require("./app");
 const { mode, server, client } = require("./config/config");
+const app = require("./app");
 
 app.listen(server.port || 3030, server.host, () => {
   console.log(

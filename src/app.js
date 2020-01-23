@@ -1,12 +1,12 @@
 const express = require("express");
 const cors = require("cors");
-const consign = require("consign");
-const db = require("./app/models");
+const timescan = require("./app/middlewares/timescan");
+const routesSession = require("./routes/routesSession");
+const routesUser = require("./routes/routesUser");
 
 class AppController {
   constructor() {
     this.express = express();
-    this.express.db = db;
     this.middlewares();
     this.routes();
   }
@@ -14,15 +14,12 @@ class AppController {
   middlewares() {
     this.express.use(express.json());
     this.express.use(cors());
+    this.express.use(timescan);
   }
 
   routes() {
-    consign({ verbose: true })
-      .then("./src/util")
-      .then("./src/app/controllers")
-      .then("./src/api")
-      .then("./src/routes.js")
-      .into(this.express);
+    this.express.use(routesUser);
+    this.express.use(routesSession);
   }
 }
 

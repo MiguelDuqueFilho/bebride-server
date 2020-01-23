@@ -38,7 +38,11 @@ module.exports = (sequelize, DataTypes) => {
       iat: now,
       exp: now + 60 * 60 * 24 * 3 // expire 3 days
     };
-    return jwt.sign({ ...payload }, authSecret);
+
+    return {
+      ...payload,
+      token: jwt.sign(payload, authSecret)
+    };
   };
 
   return User;

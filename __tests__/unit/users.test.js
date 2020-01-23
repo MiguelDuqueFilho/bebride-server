@@ -47,7 +47,7 @@ describe("Users consult", () => {
         password: password,
         confirmPassword: password
       });
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(204);
   });
 
   it("should updated user ", async () => {
@@ -65,7 +65,7 @@ describe("Users consult", () => {
         password: password,
         confirmPassword: password
       });
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(204);
   });
 
   it("should deleted user ", async () => {});

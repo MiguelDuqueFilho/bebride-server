@@ -21,9 +21,9 @@ describe("Autentication", () => {
 
   it("should not authenticate with invalid password", async () => {
     const response = await request(app)
-      .post("/signin")
+      .post("/login")
       .send({
-        userEmail: "session2@gmail.com",
+        userEmail: "session1@gmail.com",
         password: "654321"
       });
 
@@ -32,7 +32,7 @@ describe("Autentication", () => {
 
   it("should authenticate with valid credentials", async () => {
     const response = await request(app)
-      .post("/signin")
+      .post("/login")
       .send({
         userEmail: "session1@gmail.com",
         password: "123456"

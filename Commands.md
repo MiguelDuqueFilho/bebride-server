@@ -1,7 +1,8 @@
 # bebride-server
 
-<!-- Comando em sequencia usados na criação do Projeto
+Comando em sequencia usados na criação do Projeto
 
+commands yarn:
 yarn init
 question name (BeBride-Server):
 question version (1.0.0):
@@ -11,13 +12,14 @@ question repository url:
 question author: Miguel Duque Filho
 question license (MIT):
 
+commands git:
 git init
-git add \*
+git add .
 git remote add origin https://github.com/MiguelDuqueFilho/bebride-server.git
 git commit -m "first commit"
 git push -u origin master
 
-comandos sequelize:
+commands sequelize:
 yarn sequelize init
 yarn sequelize db:migration:create --name=create-users
 yarn sequelize db:migrate
@@ -206,4 +208,4 @@ Instead of using our custom error response body, we can convert our body to:
 "status": 403,
 "detail": "Authentication failed due to incorrect username or password.",
 "instance": "/login/log/abc123"
-} -->
+}
