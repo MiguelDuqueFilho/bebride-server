@@ -4,9 +4,25 @@ module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.bulkInsert("users", [
       {
-        user_name: "Wilma",
+        user_name: "Admin",
+        user_email: "admin@gmail.com",
+        password_hash:
+          "$2a$08$prJzB5C70pZxT/jPqAisfus70ecaRcGS5visJkuqRnHn5oBxJklQS",
+        user_type: 1
+      },
+      {
+        user_name: "Miguel Duque Filho",
+        user_email: "miguel.duque@gmail.com",
+        password_hash:
+          "$2a$08$prJzB5C70pZxT/jPqAisfus70ecaRcGS5visJkuqRnHn5oBxJklQS",
+        user_type: 1
+      },
+      {
+        user_name: "Wilma Area Duque",
         user_email: "wilma.duque@gmail.com",
-        password_hash: "1111222233333"
+        password_hash:
+          "$2a$08$LoCjPaMb2nJvSHlxougvbOjuRONf4zIbKv4oG2HXdi.lyNk5Vq5RO",
+        user_type: 0
       }
     ]);
   },

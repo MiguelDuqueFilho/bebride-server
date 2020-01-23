@@ -1,6 +1,6 @@
 # bebride-server
 
-Comando em sequencia usados na criação do Projeto
+<!-- Comando em sequencia usados na criação do Projeto
 
 yarn init
 question name (BeBride-Server):
@@ -206,4 +206,4 @@ Instead of using our custom error response body, we can convert our body to:
 "status": 403,
 "detail": "Authentication failed due to incorrect username or password.",
 "instance": "/login/log/abc123"
-}
+} -->

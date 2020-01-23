@@ -11,20 +11,19 @@ describe("Autentication", () => {
 
   it("shoud created user", async () => {
     const password = "123456";
-    //    const passwordHash = await bcrypt.hash(password, 8);
 
     const user = await factory.create("User", {
-      userEmail: "modelo@gmail.com",
+      userEmail: "session1@gmail.com",
       password
     });
-    expect(user.userEmail).toEqual("modelo@gmail.com");
+    expect(user.userEmail).toEqual("session1@gmail.com");
   });
 
   it("should not authenticate with invalid password", async () => {
     const response = await request(app)
       .post("/signin")
       .send({
-        userEmail: "modelo@gmail.com",
+        userEmail: "session2@gmail.com",
         password: "654321"
       });
 
@@ -35,7 +34,7 @@ describe("Autentication", () => {
     const response = await request(app)
       .post("/signin")
       .send({
-        userEmail: "modelo@gmail.com",
+        userEmail: "session1@gmail.com",
         password: "123456"
       });
 

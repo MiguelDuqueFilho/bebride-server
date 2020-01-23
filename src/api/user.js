@@ -17,35 +17,62 @@ module.exports = app => {
       .catch(err => res.status(500).json({ message: err }));
   };
 
+  const getById = (req, res) => {
+    const { id } = req.params;
+    const user = app.db.User.findAll({
+      attributes: ["id", "userName", "userEmail", "userType"],
+      where: { id }
+    })
+      .then(user => res.status(200).send(user))
+      .catch(err => res.status(500).json({ message: err }));
+  };
+
   const save = async (req, res) => {
-    const { id, userName, userEmail, password, confirmPassword } = req.body;
+    const user = { ...req.body };
+    if (req.params.id) user.id = req.params.id;
 
     try {
-      existsOrError(userName, "Nome não informado");
-      existsOrError(userEmail, "E-mail não informado");
-      existsOrError(password, "Senha não informada");
-      existsOrError(confirmPassword, "Confirmação de senha não informada");
-      equalsOrError(password, confirmPassword, "Senhas não conferem");
+      existsOrError(user.userName, "Nome não informado");
+      existsOrError(user.userEmail, "E-mail não informado");
+      existsOrError(user.password, "Senha não informada");
+      existsOrError(user.confirmPassword, "Confirmação de senha não informada");
+      equalsOrError(user.password, user.confirmPassword, "Senhas não conferem");
 
       const userFromDB = await app.db.User.findOne({
-        where: { userEmail }
+        where: { userEmail: user.userEmail }
       });
 
-      notExistsOrError(userFromDB, "Usuário já cadastrado");
-
-      const passwordHash = await bcrypt.hash(password, 8);
-
-      const user = await app.db.User.create({
-        userName,
-        userEmail,
-        passwordHash
-      });
-
-      return res.json(user);
+      if (!user.id) {
+        notExistsOrError(userFromDB, "Usuário já cadastrado");
+      }
     } catch (err) {
       return res.status(400).json({ message: err });
     }
+
+    try {
+      if (!user.id) {
+        await app.db.User.create({
+          userName: user.userName,
+          userEmail: user.userEmail,
+          password: user.password
+        });
+        return res.status(204).send();
+      } else {
+        await app.db.User.update(
+          {
+            userName: user.userName,
+            userEmail: user.userEmail,
+            password: user.password
+          },
+          { where: { id: user.id }, individualHooks: true }
+        );
+
+        return res.status(204).send();
+      }
+    } catch (err) {
+      return res.status(500).json({ message: err });
+    }
   };
 
-  return { get, save };
+  return { get, save, getById };
 };

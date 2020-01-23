@@ -13,7 +13,7 @@ module.exports = app => {
       );
     }
 
-    next();
+    return next();
   };
 
   const authuser = async (req, res, next) => {
@@ -31,7 +31,7 @@ module.exports = app => {
       return res.status(401).json({ message: "User invalid token" });
     }
 
-    next();
+    return next();
   };
 
   return { timescan, authuser };

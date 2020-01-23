@@ -2,8 +2,6 @@ const express = require("express");
 const cors = require("cors");
 const consign = require("consign");
 const db = require("./app/models");
-const { client } = require("./config/config");
-//const corsOptions = { Origin: client.host}
 
 class AppController {
   constructor() {
