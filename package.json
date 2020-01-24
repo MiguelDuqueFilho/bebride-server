@@ -20,10 +20,12 @@
     "pretest": "NODE_ENV=test sequelize db:migrate",
     "test": "NODE_ENV=test jest",
     "posttest": "NODE_ENV=test sequelize db:migrate:undo:all",
+    "seedtest": "NODE_ENV=test yarn sequelize db:seed:all",
     "devtest": "NODE_ENV=test nodemon src/server.js --ignore __tests__",
     "pretestdb": "NODE_ENV=development sequelize db:migrate",
     "testdb": "NODE_ENV=development jest",
-    "posttestdb": "NODE_ENV=development sequelize db:migrate:undo:all"
+    "posttestdb": "NODE_ENV=development sequelize db:migrate:undo:all",
+    "debug": "NODE_ENV=test nodemon src/server.js --inspect"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

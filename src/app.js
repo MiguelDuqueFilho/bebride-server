@@ -18,8 +18,8 @@ class AppController {
   }
 
   routes() {
-    this.express.use(routesUser);
     this.express.use(routesSession);
+    this.express.use(routesUser);
   }
 }
 

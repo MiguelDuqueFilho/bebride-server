@@ -1,6 +1,7 @@
-module.exports = app => {
-  const get = (req, res) => {
-    res.status(200).send();
-  };
-  return { get };
-};
+class DashboardController {
+  get(req, res) {
+    return res.status(200).json({ message: "dashboard" });
+  }
+}
+
+module.exports = new DashboardController();

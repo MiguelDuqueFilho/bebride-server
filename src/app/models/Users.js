@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
       email: this.userEmail,
       type: this.userType,
       iat: now,
-      exp: now + 60 * 60 * 24 * 3 // expire 3 days
+      exp: now + 60 * 60 * 24 * 1 // expire 1 days
     };
 
     return {
