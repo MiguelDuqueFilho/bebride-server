@@ -13,7 +13,7 @@ module.exports = async (req, res, next) => {
 
   try {
     const decode = await promisify(jwt.verify)(token, authSecret);
-    req.userId = decode.id;
+    req.decode = decode;
   } catch (err) {
     return res.status(401).json({ message: "User invalid token" });
   }

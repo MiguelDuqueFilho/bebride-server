@@ -10,7 +10,16 @@ module.exports = (sequelize, DataTypes) => {
       userEmail: DataTypes.STRING,
       password: DataTypes.VIRTUAL,
       passwordHash: DataTypes.STRING,
-      userType: DataTypes.INTEGER
+      userType: DataTypes.INTEGER,
+      passwordResetToken: {
+        type: String,
+        select: false
+      },
+      passwordResetExpires: {
+        type: Date,
+        select: false
+      },
+      deletedAt: DataTypes.DATE
     },
     {
       hooks: {

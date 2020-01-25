@@ -6,7 +6,7 @@ module.exports.existsOrError = function(value, msg) {
 
 module.exports.notExistsOrError = function(value, msg) {
   try {
-    existsOrError(value, msg);
+    this.existsOrError(value, msg);
   } catch (msg) {
     return;
   }

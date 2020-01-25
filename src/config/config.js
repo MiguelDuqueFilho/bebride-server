@@ -22,6 +22,12 @@ module.exports = {
     host: process.env.SERVER_HOST,
     port: process.env.SERVER_PORT
   },
+  email: {
+    host: process.env.EMAIL_HOST,
+    port: process.env.EMAIL_PORT,
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  },
   client: {
     host: process.env.CLIENT_HOST
   }
