@@ -26,8 +26,6 @@ class ExtendableError extends Error {
 class DatabaseError extends ExtendableError {
   constructor(message) {
     super(message);
-    console.log(`message === ${message}`);
-    console.log(`this.message === ${this.message}`);
     this.message = {
       type: message.name,
       title: message.errors[0].type,

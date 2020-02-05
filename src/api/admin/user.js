@@ -1,59 +1,72 @@
 const { User } = require("../../app/models");
-const validation = require("../../util/validation");
+const { existsOrError, equalsOrError } = require("../../util/validation");
+
+const { returnsHandler } = require("../../util/errorHandler");
 
 class UserController {
   get(req, res) {
     User.findAll({
       attributes: ["id", "userName", "userEmail", "userType"]
     })
-      .then(users => res.status(200).send(users))
-      .catch(err => res.status(500).json({ message: err }));
+      .then(users =>
+        res
+          .status(200)
+          .send(returnsHandler(true, "Consulta Realizada!!", users))
+      )
+      .catch(err => {
+        res.status(500).send(returnsHandler(false, err));
+      });
   }
 
   getById(req, res) {
     const { id } = req.params;
-    const user = User.findAll({
+    User.findAll({
       attributes: ["id", "userName", "userEmail", "userType"],
       where: { id }
     })
-      .then(user => res.status(200).send(user))
-      .catch(err => res.status(500).json({ message: err }));
+      .then(user =>
+        res
+          .status(200)
+          .send(returnsHandler(true, "Consulta Realizada!!", users))
+      )
+      .catch(err => res.status(500).send(returnsHandler(false, err)));
   }
 
   async save(req, res) {
     const user = { ...req.body };
     try {
-      validation.existsOrError(user.userEmail, "E-mail não informado");
-      validation.existsOrError(user.userName, "Nome não informado");
-      validation.existsOrError(user.password, "Senha não informada");
-      validation.existsOrError(
-        user.confirmPassword,
-        "Confirmação de senha não informada"
-      );
-      validation.equalsOrError(
-        user.password,
-        user.confirmPassword,
-        "Senhas não conferem"
-      );
-      const userFromDB = await User.findOne({
-        where: { userEmail: user.userEmail }
-      });
-
-      validation.notExistsOrError(userFromDB, "Usuário já cadastrado");
+      existsOrError(user.userEmail, "E-mail não informado");
+      existsOrError(user.userName, "Nome não informado");
+      existsOrError(user.password, "Senha não informada");
+      equalsOrError(user.password, user.confirmPassword, "Senhas não conferem");
     } catch (err) {
-      return res.status(400).json({ message: err });
+      return res.status(400).json(returnsHandler(false, err));
     }
 
-    try {
-      await User.create({
-        userName: user.userName,
-        userEmail: user.userEmail,
-        password: user.password
-      });
-      return res.status(204).send();
-    } catch (err) {
-      return res.status(500).json({ message: err });
+    let userFromDB = await User.findOne({
+      where: { userEmail: user.userEmail }
+    });
+
+    if (userFromDB) {
+      return res
+        .status(500)
+        .send(returnsHandler(false, "Usuário já cadastrado"));
     }
+
+    const userNewDB = await User.create({
+      userName: user.userName,
+      userEmail: user.userEmail,
+      password: user.password
+    });
+
+    User.findAll({
+      attributes: ["id", "userName", "userEmail", "userType"],
+      where: { id: userNewDB.id }
+    })
+      .then(user => {
+        res.send(returnsHandler(true, "Usuário incuido com sucesso!", user));
+      })
+      .catch(err => res.status(500).send(returnsHandler(false, err)));
   }
 
   async update(req, res) {
@@ -64,24 +77,31 @@ class UserController {
         where: { id: user.id }
       });
 
-      validation.existsOrError(userFromDB, "Usuário não cadastrado");
-      console.log(typeof user.password);
+      if (!userFromDB) {
+        return res
+          .status(500)
+          .send(returnsHandler(false, "Usuário não cadastrado"));
+      }
+      equalsOrError(
+        user.userEmail,
+        userFromDB.userEmail,
+        "Email não confere.."
+      );
+
+      equalsOrError(user.password, user.confirmPassword, "Senhas não conferem");
+
       if (typeof user.password !== "undefined" && user.password !== "") {
-        validation.existsOrError(
+        existsOrError(
           user.confirmPassword,
           "Confirmação de senha não informada"
-        );
-        validation.equalsOrError(
-          user.password,
-          user.confirmPassword,
-          "Senhas não conferem"
         );
       } else {
         delete user.password;
         delete user.confirmPassword;
       }
     } catch (err) {
-      return res.status(400).json({ message: err });
+      console.log(err);
+      return res.status(400).json(returnsHandler(false, err));
     }
 
     try {
@@ -90,9 +110,16 @@ class UserController {
         individualHooks: true
       });
 
-      return res.status(204).json({ user });
+      User.findAll({
+        attributes: ["id", "userName", "userEmail", "userType"],
+        where: { id: user.id }
+      })
+        .then(user =>
+          res.send(returnsHandler(true, "Usuário Atualizado!!", user))
+        )
+        .catch(err => res.status(500).json({ message: err }));
     } catch (err) {
-      return res.status(500).json({ message: err });
+      return res.status(500).json(returnsHandler(false, err));
     }
   }
 
@@ -103,11 +130,13 @@ class UserController {
       const userFromDB = await User.destroy({
         where: { id }
       });
-      validation.existsOrError(userFromDB, "Usuário Não encontrado!");
+      existsOrError(userFromDB, "Usuário Não encontrado!");
 
-      return res.status(200).json({ message: "User deleted!" });
+      return res
+        .status(200)
+        .send(returnsHandler(true, "Usuário excluido!!", null));
     } catch (err) {
-      return res.status(400).json({ message: err });
+      return res.status(400).json(returnsHandler(false, err));
     }
   }
 }

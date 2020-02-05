@@ -1,18 +1,36 @@
 module.exports.existsOrError = function(value, msg) {
-  if (!value) throw msg;
-  if (Array.isArray(value) && value.length === 0) throw msg;
-  if (typeof value === "string" && !value.trim()) throw msg;
+  const ErrorSchema = {
+    success: false,
+    message: msg,
+    details: "validatedError"
+  };
+
+  if (!value) throw ErrorSchema;
+  if (Array.isArray(value) && value.length === 0) throw ErrorSchema;
+  if (typeof value === "string" && !value.trim()) throw ErrorSchema;
 };
 
 module.exports.notExistsOrError = function(value, msg) {
+  const ErrorSchema = {
+    success: false,
+    message: msg,
+    details: "validatedError"
+  };
+
   try {
     this.existsOrError(value, msg);
   } catch (msg) {
     return;
   }
-  throw msg;
+  throw ErrorSchema;
 };
 
 module.exports.equalsOrError = function(valueA, valueB, msg) {
-  if (valueA !== valueB) throw msg;
+  const ErrorSchema = {
+    success: false,
+    message: msg,
+    details: "validatedError"
+  };
+
+  if (valueA !== valueB) throw ErrorSchema;
 };
