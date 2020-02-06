@@ -1,17 +1,18 @@
-// module.exports = (err, req, res, next) => {
-//   console.error(err.stack);
-//   return next(err);
-// };
-
-module.exports.returnsHandler = (
-  success,
-  message,
-  details = "Sem Detalhes"
-) => {
-  let ErrorSchema = {
-    success,
+module.exports.returnsData = (message = "", data = null) => {
+  const RespSchema = {
+    success: true,
     message,
-    details
+    data
+  };
+
+  return RespSchema;
+};
+
+module.exports.errorHandler = (message, data = "Sem Detalhes") => {
+  let ErrorSchema = {
+    success: false,
+    message,
+    data
   };
 
   if (message.details === "validatedError") {
@@ -35,7 +36,9 @@ module.exports.returnsHandler = (
       default:
         ErrorSchema.message = "default Error Database...";
         if (process.env.NODE_ENV !== "production") {
-          ErrorSchema.details = message;
+          ErrorSchema.data = message;
+        } else {
+          ErrorSchema.data = message.name;
         }
     }
   }

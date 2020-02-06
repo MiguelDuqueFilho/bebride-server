@@ -1,7 +1,7 @@
 const { User } = require("../../app/models");
 const { existsOrError, equalsOrError } = require("../../util/validation");
 
-const { returnsHandler } = require("../../util/errorHandler");
+const { errorHandler, returnsData } = require("../../util/respHandler");
 
 class UserController {
   get(req, res) {
@@ -9,12 +9,10 @@ class UserController {
       attributes: ["id", "userName", "userEmail", "userType"]
     })
       .then(users =>
-        res
-          .status(200)
-          .send(returnsHandler(true, "Consulta Realizada!!", users))
+        res.status(200).send(returnsData("Consulta Realizada!!", users))
       )
       .catch(err => {
-        res.status(500).send(returnsHandler(false, err));
+        res.status(500).send(errorHandler("Erro interno lista Usuários", err));
       });
   }
 
@@ -25,11 +23,11 @@ class UserController {
       where: { id }
     })
       .then(user =>
-        res
-          .status(200)
-          .send(returnsHandler(true, "Consulta Realizada!!", users))
+        res.status(200).send(returnsData("Consulta Realizada!!", user))
       )
-      .catch(err => res.status(500).send(returnsHandler(false, err)));
+      .catch(err =>
+        res.status(500).send(errorHandler("Usuário não encontrado...", err))
+      );
   }
 
   async save(req, res) {
@@ -40,7 +38,7 @@ class UserController {
       existsOrError(user.password, "Senha não informada");
       equalsOrError(user.password, user.confirmPassword, "Senhas não conferem");
     } catch (err) {
-      return res.status(400).json(returnsHandler(false, err));
+      return res.status(400).send(errorHandler(err));
     }
 
     let userFromDB = await User.findOne({
@@ -48,9 +46,7 @@ class UserController {
     });
 
     if (userFromDB) {
-      return res
-        .status(500)
-        .send(returnsHandler(false, "Usuário já cadastrado"));
+      return res.status(500).send(errorHandler("Usuário já cadastrado"));
     }
 
     const userNewDB = await User.create({
@@ -64,9 +60,9 @@ class UserController {
       where: { id: userNewDB.id }
     })
       .then(user => {
-        res.send(returnsHandler(true, "Usuário incuido com sucesso!", user));
+        res.send(returnsData("Usuário incuido com sucesso!", user));
       })
-      .catch(err => res.status(500).send(returnsHandler(false, err)));
+      .catch(err => res.status(500).send(errorHandler(err)));
   }
 
   async update(req, res) {
@@ -78,9 +74,7 @@ class UserController {
       });
 
       if (!userFromDB) {
-        return res
-          .status(500)
-          .send(returnsHandler(false, "Usuário não cadastrado"));
+        return res.status(500).send(errorHandler("Usuário não cadastrado"));
       }
       equalsOrError(
         user.userEmail,
@@ -101,7 +95,7 @@ class UserController {
       }
     } catch (err) {
       console.log(err);
-      return res.status(400).json(returnsHandler(false, err));
+      return res.status(400).send(errorHandler(err));
     }
 
     try {
@@ -114,12 +108,10 @@ class UserController {
         attributes: ["id", "userName", "userEmail", "userType"],
         where: { id: user.id }
       })
-        .then(user =>
-          res.send(returnsHandler(true, "Usuário Atualizado!!", user))
-        )
-        .catch(err => res.status(500).json({ message: err }));
+        .then(user => res.send(returnsData("Usuário Atualizado!!", user)))
+        .catch(err => res.status(500).send(errorHandler(err)));
     } catch (err) {
-      return res.status(500).json(returnsHandler(false, err));
+      return res.status(500).json(errorHandler(err));
     }
   }
 
@@ -132,11 +124,9 @@ class UserController {
       });
       existsOrError(userFromDB, "Usuário Não encontrado!");
 
-      return res
-        .status(200)
-        .send(returnsHandler(true, "Usuário excluido!!", null));
+      return res.status(200).send(returnsData("Usuário excluido!!", null));
     } catch (err) {
-      return res.status(400).json(returnsHandler(false, err));
+      return res.status(400).send(errorHandler(err));
     }
   }
 }
