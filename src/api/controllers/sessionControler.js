@@ -1,5 +1,5 @@
 const { User } = require("../../app/models");
-const { existsOrError } = require("../../util/validation");
+const { existsOrError, equalsOrError } = require("../../util/validation");
 const { errorHandler, returnsData } = require("../../util/respHandler");
 const { authSecret } = require("../../config/config");
 const jwt = require("jsonwebtoken");
@@ -71,7 +71,9 @@ class SessionController {
       .then(user => {
         res.send(returnsData("Usuário incuido com sucesso!", user));
       })
-      .catch(err => res.status(500).send(errorHandler(err)));
+      .catch(err => {
+        res.status(500).send(errorHandler(err));
+      });
   }
 
   async logoff(req, res) {
@@ -85,7 +87,6 @@ class SessionController {
 
   async forgotPassword(req, res) {
     const { userEmail } = req.body;
-
     try {
       const user = await User.findOne({
         where: { userEmail }
@@ -119,7 +120,7 @@ class SessionController {
 
       return res.send(returnsData("Email enviado...", info));
     } catch (err) {
-      return res.status(400).send(errorHandler("Erro enviando e-mail", err));
+      return res.status(400).send(errorHandler(err));
     }
   }
   async resetPassword(req, res) {
