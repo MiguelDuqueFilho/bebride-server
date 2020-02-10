@@ -11,7 +11,7 @@ module.exports = {
         event_start: "2020-03-01",
         event_date: "2020-03-01",
         event_finish: "2020-03-01",
-        status_type_id: 1,
+        event_status_id: 1,
         address_id: null
       },
       {
@@ -21,7 +21,7 @@ module.exports = {
         event_start: "2020-03-01",
         event_date: "2020-03-01",
         event_finish: "2020-03-01",
-        status_type_id: 1,
+        event_status_id: 2,
         address_id: null
       },
       {
@@ -32,7 +32,7 @@ module.exports = {
         event_start: "2020-03-01",
         event_date: "2020-03-01",
         event_finish: "2020-03-01",
-        status_type_id: 1,
+        event_status_id: 3,
         address_id: null
       },
       {
@@ -43,7 +43,7 @@ module.exports = {
         event_start: "2020-03-01",
         event_date: "2020-03-01",
         event_finish: "2020-03-01",
-        status_type_id: 1,
+        event_status_id: 4,
         address_id: null
       }
     ]);

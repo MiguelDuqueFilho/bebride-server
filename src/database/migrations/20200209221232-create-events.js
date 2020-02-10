@@ -1,18 +1,14 @@
 "use strict";
+// const { Events, EventStatus, EventTypes } = require("../../app/models");
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable("events", {
-      id: {
+      event_id: {
         type: Sequelize.INTEGER(11),
         primaryKey: true,
         autoIncrement: true,
         allowNull: false
-      },
-      event_type_id: {
-        type: Sequelize.INTEGER(11),
-        allowNull: false,
-        defaultValue: 0
       },
       event_name: {
         type: Sequelize.STRING,
@@ -37,15 +33,18 @@ module.exports = {
         allowNull: true,
         defaultValue: null
       },
-      status_type_id: {
+      event_type_id: {
         type: Sequelize.INTEGER(11),
-        allowNull: false,
-        defaultValue: 0
+        allowNull: false
+      },
+      event_status_id: {
+        type: Sequelize.INTEGER(11),
+        allowNull: false
       },
       address_id: {
         type: Sequelize.INTEGER(11),
         allowNull: true,
-        defaultValue: null
+        defaultValue: 0
       },
       created_at: {
         type: Sequelize.DATE,
