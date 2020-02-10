@@ -21,7 +21,7 @@ git push -u origin master
 
 commands sequelize:
 yarn sequelize init
-yarn sequelize db:migration:create --name=create-users
+yarn sequelize migrate:create --name=create-users
 yarn sequelize db:migrate
 yarn sequelize db:migrate:undo
 yarn sequelize seed:generate --name carga-inicial-users

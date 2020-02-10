@@ -2,47 +2,36 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable("users", {
-      id: {
+    return queryInterface.createTable("event_types", {
+      event_type_id: {
         type: Sequelize.INTEGER(11),
         primaryKey: true,
         autoIncrement: true,
         allowNull: false
       },
-      person_id: {
-        type: Sequelize.INTEGER(11),
-        allowNull: false,
-        defaultValue: 0
-      },
-      user_name: {
+      event_type_name: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      User_email: {
-        type: Sequelize.STRING,
-        unique: true,
-        allowNull: false
-      },
-      password_hash: {
+      event_type_resumo: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      user_type: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        defaultValue: 0
+      event_type_description: {
+        type: Sequelize.TEXT,
+        allowNull: false
       },
-      password_reset_token: {
+      event_type_icon: {
         type: Sequelize.STRING,
-        select: false
+        allowNull: false
       },
-      password_reset_expires: {
-        type: Sequelize.DATE,
-        select: false
+      event_type_show: {
+        type: Sequelize.INTEGER(4),
+        allowNull: false
       },
-      deleted_at: {
-        type: Sequelize.DATE,
-        allowNull: true
+      event_type_url: {
+        type: Sequelize.STRING,
+        allowNull: false
       },
       created_at: {
         type: Sequelize.DATE,
@@ -57,6 +46,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable("users");
+    return queryInterface.dropTable("event_types");
   }
 };
