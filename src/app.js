@@ -3,6 +3,7 @@ const cors = require("cors");
 const timeScan = require("./app/middlewares/timeScan");
 const routesSession = require("./routes/routesSession");
 const routesUser = require("./routes/routesUser");
+const routesAdmin = require("./routes/routesAdmin");
 
 class AppController {
   constructor() {
@@ -20,6 +21,7 @@ class AppController {
   routes() {
     this.express.use(routesSession);
     this.express.use(routesUser);
+    this.express.use(routesAdmin);
   }
 }
 

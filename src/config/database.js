@@ -25,7 +25,7 @@ module.exports = {
   password: process.env.DB_PASS,
   dialect: process.env.DIALECT || "mysql",
   storage: "./__tests__/database.sqlite",
-  logging: false,
+  logging: false, //console.log
   define: {
     timestamps: true,
     underscored: true,

@@ -1,28 +1,28 @@
 "use strict";
 module.exports = (sequelize, DataTypes) => {
   const Event = sequelize.define(
-    "events",
+    "Event",
     {
-      eventId: DataTypes.INTEGER,
+      id: { type: DataTypes.INTEGER, primaryKey: true },
       eventName: DataTypes.STRING,
       eventDescription: DataTypes.STRING,
       eventStart: DataTypes.DATE,
       eventDate: DataTypes.DATE,
       eventFinish: DataTypes.DATE,
-      eventTypeId: DataTypes.INTEGER,
-      eventStatusId: DataTypes.INTEGER,
-      addressId: DataTypes.INTEGER
+      eventTypeId: { type: DataTypes.INTEGER, select: false },
+      eventStatusId: { type: DataTypes.INTEGER, select: false },
+      addressId: { type: DataTypes.INTEGER, select: false }
     },
     {}
   );
   Event.associate = function(models) {
-    Event.belongsTo(models.EventType, {
-      foreignKey: "eventTypeId",
-      targetKey: "eventTypeId"
+    Event.hasMany(models.EventType, {
+      sourceKey: "eventTypeId",
+      foreignKey: "id"
     });
-    Event.belongsTo(models.EventStatus, {
-      foreignKey: "eventStatusId",
-      targetKey: "eventStatusId"
+    Event.hasMany(models.EventStatu, {
+      sourceKey: "eventStatusId",
+      foreignKey: "id"
     });
   };
   return Event;

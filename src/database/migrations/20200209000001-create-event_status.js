@@ -3,7 +3,7 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable("event_status", {
-      event_status_id: {
+      id: {
         type: Sequelize.INTEGER(11),
         primaryKey: true,
         autoIncrement: true,

@@ -4,7 +4,7 @@ module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.bulkInsert("event_types", [
       {
-        event_type_id: 1,
+        id: 1,
         event_type_name: "Assessoria Completa",
         event_type_resumo: "Nossa  Assessoria Completa ...",
         event_type_description:
@@ -14,7 +14,7 @@ module.exports = {
         event_type_url: "/eventtypes/complete"
       },
       {
-        event_type_id: 2,
+        id: 2,
         event_type_name: "Assessoria Final",
         event_type_resumo: "Nossa Assessoria Final ...",
         event_type_description:
@@ -24,7 +24,7 @@ module.exports = {
         event_type_url: "/eventtypes/last"
       },
       {
-        event_type_id: 3,
+        id: 3,
         event_type_name: "Assessoria Pedido de Casamento",
         event_type_resumo: "Nossa Assessoria de pedido de casamento ...",
         event_type_description:
@@ -34,7 +34,7 @@ module.exports = {
         event_type_url: "/eventtypes/requests"
       },
       {
-        event_type_id: 4,
+        id: 4,
         event_type_name: "Consultoria",
         event_type_resumo: "Nossa Consultoria ...",
         event_type_description:

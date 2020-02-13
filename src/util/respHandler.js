@@ -8,11 +8,11 @@ module.exports.returnsData = (message = "", data = null) => {
   return RespSchema;
 };
 
-module.exports.errorHandler = (message, data = "Sem Detalhes") => {
+module.exports.errorHandler = (message, errors = "Sem Detalhes") => {
   let ErrorSchema = {
     success: false,
     message,
-    data
+    errors
   };
 
   if (message.details === "validatedError") {
@@ -36,9 +36,9 @@ module.exports.errorHandler = (message, data = "Sem Detalhes") => {
       default:
         ErrorSchema.message = "default Error Database...";
         if (process.env.NODE_ENV !== "production") {
-          ErrorSchema.data = message;
+          ErrorSchema.errors = message;
         } else {
-          ErrorSchema.data = message.name;
+          ErrorSchema.errors = message.name;
         }
     }
   }

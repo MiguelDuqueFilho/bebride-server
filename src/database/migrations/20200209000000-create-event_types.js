@@ -3,7 +3,7 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable("event_types", {
-      event_type_id: {
+      id: {
         type: Sequelize.INTEGER(11),
         primaryKey: true,
         autoIncrement: true,
