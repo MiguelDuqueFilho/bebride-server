@@ -6,7 +6,6 @@ const { errorHandler, returnsData } = require("../../util/respHandler");
 class EventsController {
   get(req, res) {
     Event.findAll({
-      attributes: ["id", "eventName", "eventDescription"],
       include: [
         {
           model: EventType,
@@ -28,7 +27,6 @@ class EventsController {
 
   async save(req, res) {
     const event = { ...req.body };
-    console.log(event);
     try {
       existsOrError(event.eventName, "Nome do evento não informado");
       existsOrError(event.eventDescription, "Descrição não informado");
@@ -54,6 +52,66 @@ class EventsController {
       res.status(200).send(returnsData("Consulta Realizada!!", null));
     } catch (err) {
       return res.status(500).send(errorHandler(err));
+    }
+  }
+
+  async update(req, res) {
+    const event = { ...req.body };
+    if (req.params.id) event.id = req.params.id;
+    try {
+      const eventFromDB = await Event.findOne({
+        where: { id: event.id }
+      });
+
+      if (!eventFromDB) {
+        return res.status(500).send(errorHandler("Evento não cadastrado"));
+      }
+
+      try {
+        existsOrError(event.eventName, "Nome do evento não informado");
+        existsOrError(event.eventDescription, "Descrição não informado");
+        existsOrError(
+          event.eventStart,
+          "Data de inicio do evento não informada"
+        );
+        existsOrError(event.eventDate, "Data do evento não informada");
+        existsOrError(event.eventStart, "Data do evento não informada");
+        existsOrError(event.eventFinish, "Data de término não informada");
+      } catch (err) {
+        return res.status(400).send(errorHandler(err));
+      }
+    } catch (err) {
+      console.log(err);
+      return res.status(400).send(errorHandler(err));
+    }
+
+    try {
+      await Event.update(event, {
+        where: { id: event.id }
+      });
+
+      Event.findAll({
+        where: { id: event.id }
+      })
+        .then(event => res.send(returnsData("Evento Atualizado!!", event)))
+        .catch(err => res.status(500).send(errorHandler(err)));
+    } catch (err) {
+      return res.status(500).json(errorHandler(err));
+    }
+  }
+
+  async delete(req, res) {
+    const { id } = req.params;
+
+    try {
+      const eventFromDB = await Event.destroy({
+        where: { id }
+      });
+      existsOrError(eventFromDB, "Evento Não encontrado!");
+
+      return res.status(200).send(returnsData("Evento excluido!!", null));
+    } catch (err) {
+      return res.status(400).send(errorHandler(err));
     }
   }
 }

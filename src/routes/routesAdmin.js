@@ -7,5 +7,7 @@ const events = require("../api/admin/Events");
 routes.get("/dashboard", dashboard.get);
 routes.get("/events", events.get);
 routes.post("/events", events.save);
+routes.put("/events/:id", events.update);
+routes.delete("/events/:id", events.delete);
 
 module.exports = routes;

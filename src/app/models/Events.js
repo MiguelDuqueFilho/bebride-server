@@ -6,9 +6,9 @@ module.exports = (sequelize, DataTypes) => {
       id: { type: DataTypes.INTEGER, primaryKey: true },
       eventName: DataTypes.STRING,
       eventDescription: DataTypes.STRING,
-      eventStart: DataTypes.DATE,
-      eventDate: DataTypes.DATE,
-      eventFinish: DataTypes.DATE,
+      eventStart: DataTypes.DATEONLY,
+      eventDate: DataTypes.DATEONLY,
+      eventFinish: DataTypes.DATEONLY,
       eventTypeId: { type: DataTypes.INTEGER, select: false },
       eventStatusId: { type: DataTypes.INTEGER, select: false },
       addressId: { type: DataTypes.INTEGER, select: false }

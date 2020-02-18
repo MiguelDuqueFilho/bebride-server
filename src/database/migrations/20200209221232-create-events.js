@@ -19,17 +19,17 @@ module.exports = {
         allowNull: false
       },
       event_start: {
-        type: Sequelize.DATE,
+        type: Sequelize.DATEONLY,
         allowNull: true,
         defaultValue: null
       },
       event_date: {
-        type: Sequelize.DATE,
+        type: Sequelize.DATEONLY,
         allowNull: true,
         defaultValue: null
       },
       event_finish: {
-        type: Sequelize.DATE,
+        type: Sequelize.DATEONLY,
         allowNull: true,
         defaultValue: null
       },
