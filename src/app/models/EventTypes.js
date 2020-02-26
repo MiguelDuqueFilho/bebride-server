@@ -4,15 +4,15 @@ module.exports = (sequelize, DataTypes) => {
     "EventType",
     {
       id: { type: DataTypes.INTEGER, primaryKey: true },
-      eventTypeName: DataTypes.STRING
+      eventTypeName: DataTypes.STRING,
+      eventTypeResumo: DataTypes.STRING,
+      eventTypeDescription: DataTypes.STRING,
+      eventTypeIcon: DataTypes.STRING,
+      eventTypeShow: DataTypes.STRING,
+      eventTypeUrl: DataTypes.STRING
     },
     {}
   );
-  EventType.associate = function(models) {
-    // EventType.belongsTo(models.Event, {
-    //   sourceKey: "id",
-    //   foreignKey: "eventTypeId"
-    // });
-  };
+  EventType.associate = function(models) {};
   return EventType;
 };

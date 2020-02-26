@@ -114,5 +114,31 @@ class EventsController {
       return res.status(400).send(errorHandler(err));
     }
   }
+
+  getTypes(req, res) {
+    EventType.findAll({
+      where: { eventTypeShow: 1 }
+    })
+      .then(eventTypes =>
+        res.status(200).send(returnsData("Consulta Realizada!!", eventTypes))
+      )
+      .catch(err => {
+        res
+          .status(500)
+          .send(errorHandler("Erro interno lista tipos de Eventos", err));
+      });
+  }
+
+  getStatus(req, res) {
+    EventStatu.findAll()
+      .then(eventStatus =>
+        res.status(200).send(returnsData("Consulta Realizada!!", eventStatus))
+      )
+      .catch(err => {
+        res
+          .status(500)
+          .send(errorHandler("Erro interno lista tipos de Eventos", err));
+      });
+  }
 }
 module.exports = new EventsController();

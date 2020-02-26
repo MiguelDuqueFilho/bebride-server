@@ -158,6 +158,23 @@ class SessionController {
       return res.status(400).send(errorHandler(err));
     }
   }
+
+  async sendEmail(req, res) {
+    const { userName, userEmail, messageEmail } = req.body;
+
+    const info = await mailer.sendMail({
+      to: userEmail,
+      from: "miguel.duque@globo.com",
+      subject: "Dúvidas e Sugestões",
+      template: "doubts",
+      context: { userName, userEmail, messageEmail }
+    });
+
+    return res.send(returnsData("Email enviado...", info));
+  }
+  catch(err) {
+    return res.status(400).send(errorHandler(err));
+  }
 }
 
 module.exports = new SessionController();
