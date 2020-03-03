@@ -14,7 +14,7 @@ class SessionController {
       const decode = await promisify(jwt.verify)(token, authSecret);
       return res.send(returnsData("Token está valido.."));
     } catch (err) {
-      return res.status(401).send(errorHandler("User invalid token"));
+      return res.status(401).send(errorHandler("Usuário token invalido."));
     }
   }
 
@@ -27,10 +27,10 @@ class SessionController {
 
       const user = await User.findOne({ where: { userEmail } });
 
-      existsOrError(user, "Usuário não encontrado!");
+      existsOrError(user, "Usuário ou Senha inválido!!");
 
       if (!(await user.checkPassword(password))) {
-        return res.status(401).send(errorHandler("Email/Senha inválidos!"));
+        return res.status(401).send(errorHandler("Email ou Senha inválido!"));
       }
 
       return res.send(returnsData("Login com sucesso..", user.generateToken()));
