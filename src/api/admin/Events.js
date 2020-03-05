@@ -4,25 +4,30 @@ const { existsOrError, equalsOrError } = require("../../util/validation");
 const { errorHandler, returnsData } = require("../../util/respHandler");
 
 class EventsController {
-  get(req, res) {
-    Event.findAll({
-      include: [
-        {
-          model: EventType,
-          attributes: ["eventTypeName"]
-        },
-        {
-          model: EventStatu,
-          attributes: ["eventStatusName"]
-        }
-      ]
-    })
-      .then(events =>
-        res.status(200).send(returnsData("Consulta Realizada!!", events))
-      )
-      .catch(err => {
-        res.status(500).send(errorHandler("Erro interno lista Eventos", err));
+  async get(req, res) {
+    const page = parseInt(req.query.page) || 1;
+    const paginate = parseInt(req.query.limit) || 1;
+
+    try {
+      const resp = await Event.paginate({
+        page,
+        paginate,
+        include: [
+          {
+            model: EventType,
+            attributes: ["eventTypeName"]
+          },
+          {
+            model: EventStatu,
+            attributes: ["eventStatusName"]
+          }
+        ]
       });
+      resp.page = page;
+      res.status(200).send(returnsData("Consulta Realizada!!", resp));
+    } catch (error) {
+      res.status(500).send(errorHandler("Erro interno lista Eventos", error));
+    }
   }
 
   async save(req, res) {
@@ -34,6 +39,8 @@ class EventsController {
       existsOrError(event.eventDate, "Data do evento não informada");
       existsOrError(event.eventStart, "Data do evento não informada");
       existsOrError(event.eventFinish, "Data de término não informada");
+      existsOrError(event.eventTypeId, "Tipo de evento não informado");
+      existsOrError(event.eventStatusId, "Status do evento não informado");
     } catch (err) {
       return res.status(400).send(errorHandler(err));
     }

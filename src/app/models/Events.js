@@ -1,4 +1,6 @@
 "use strict";
+const sequelizePaginate = require("sequelize-paginate");
+
 module.exports = (sequelize, DataTypes) => {
   const Event = sequelize.define(
     "Event",
@@ -25,5 +27,6 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: "id"
     });
   };
+  sequelizePaginate.paginate(Event);
   return Event;
 };
