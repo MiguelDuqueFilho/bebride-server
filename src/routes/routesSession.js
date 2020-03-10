@@ -1,5 +1,5 @@
 const routes = require("express").Router();
-const isAuthenticated = require("../app/middlewares/auth");
+const { isAuthenticated } = require("../app/middlewares/auth");
 const SessionController = require("../api/controllers/sessionControler");
 
 routes.post("/validate_token", SessionController.validateToken);

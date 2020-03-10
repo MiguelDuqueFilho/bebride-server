@@ -3,21 +3,68 @@ const jwt = require("jsonwebtoken");
 const { promisify } = require("util");
 const { errorHandler } = require("../../util/respHandler");
 
-module.exports = async (req, res, next) => {
+const authenticate = async req => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader) {
-    return res.status(401).json({ message: "usuário não logado." });
+    return false;
   }
 
-  const [, token] = authHeader.split(" ");
+  const [bearer, token] = authHeader.split(" ");
+  if (bearer !== "Bearer") {
+    return false;
+  }
 
   try {
     const decode = await promisify(jwt.verify)(token, authSecret);
     req.decode = decode;
+    return true;
   } catch (err) {
-    return res.status(401).send(errorHandler("Usuário token invalido."));
+    return false;
   }
+};
 
-  return next();
+const isAuthenticate = async (req, res, next) => {
+  const isOk = await authenticate(req);
+  if (isOk) {
+    return next();
+  }
+  return res.status(401).send(errorHandler("Token Inválido."));
+};
+
+const isAuthenticatedAdmin = async (req, res, next) => {
+  const isOk = await authenticate(req);
+  if (isOk) {
+    if (req.decode.type === 1) {
+      return next();
+    }
+  }
+  return res.status(401).send(errorHandler("Usuário Inválido."));
+};
+
+const isAuthenticatedClient = async (req, res, next) => {
+  const isOk = await authenticate(req);
+  if (isOk) {
+    if (req.decode.type === 2) {
+      return next();
+    }
+  }
+  return res.status(401).send(errorHandler("Usuário Inválido."));
+};
+
+const isAuthenticatedPartner = async (req, res, next) => {
+  const isOk = await authenticate(req);
+  if (isOk) {
+    if (req.decode.type === 3) {
+      return next();
+    }
+  }
+  return res.status(401).send(errorHandler("Usuário Inválido."));
+};
+
+module.exports = {
+  isAuthenticated: isAuthenticate,
+  isAuthenticatedAdmin: isAuthenticatedAdmin,
+  isAuthenticatedClient: isAuthenticatedClient,
+  isAuthenticatedPartner: isAuthenticatedPartner
 };

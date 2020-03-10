@@ -4,16 +4,21 @@ const { existsOrError, equalsOrError } = require("../../util/validation");
 const { errorHandler, returnsData } = require("../../util/respHandler");
 
 class UserController {
-  get(req, res) {
-    User.findAll({
-      attributes: ["id", "userName", "userEmail", "userType"]
-    })
-      .then(users =>
-        res.status(200).send(returnsData("Consulta Realizada!!", users))
-      )
-      .catch(err => {
-        res.status(500).send(errorHandler("Erro interno lista Usuários", err));
+  async get(req, res) {
+    const page = parseInt(req.query.page) || 1;
+    const paginate = parseInt(req.query.limit) || 1;
+
+    try {
+      const users = await User.paginate({
+        attributes: ["id", "userName", "userEmail", "userType"],
+        page,
+        paginate
       });
+      users.page = page;
+      res.status(200).send(returnsData("Consulta Realizada!!", users));
+    } catch (error) {
+      res.status(500).send(errorHandler("Erro interno lista Usuários", error));
+    }
   }
 
   getById(req, res) {

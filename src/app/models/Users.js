@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { authSecret } = require("../../config/config");
+const sequelizePaginate = require("sequelize-paginate");
 
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
@@ -53,6 +54,6 @@ module.exports = (sequelize, DataTypes) => {
       token: jwt.sign(payload, authSecret)
     };
   };
-
+  sequelizePaginate.paginate(User);
   return User;
 };
