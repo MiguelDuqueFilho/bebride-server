@@ -20,6 +20,10 @@ module.exports = (sequelize, DataTypes) => {
         type: Date,
         select: false
       },
+      remoteResetIp: {
+        type: String,
+        select: false
+      },
       deletedAt: DataTypes.DATE
     },
     {

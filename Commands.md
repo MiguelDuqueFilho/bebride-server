@@ -21,13 +21,16 @@ git push -u origin master
 
 commands sequelize:
 yarn sequelize init
-yarn sequelize migrate:create --name=create-users
+
+yarn sequelize-cli model:generate --name create-UserPasswordRecoveries --attributes firstName:string,lastName:string,email:string
+
 yarn sequelize db:migrate
 yarn sequelize db:migrate:undo
 yarn sequelize seed:generate --name carga-inicial-users
 yarn sequelize db:seed:all
 yarn sequelize db:seed:undo:all
 
+yarn sequelize db:seed 20200209225440-carga-inicial-depositions
 
 RFC 7807 generalized error-handling schema.
 

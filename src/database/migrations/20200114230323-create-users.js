@@ -40,9 +40,17 @@ module.exports = {
         type: Sequelize.DATE,
         select: false
       },
+      remote_reset_ip: {
+        type: Sequelize.DATE,
+        select: false
+      },
       deleted_at: {
         type: Sequelize.DATE,
         allowNull: true
+      },
+      remote_reset_ip: {
+        type: Sequelize.STRING,
+        select: false
       },
       created_at: {
         type: Sequelize.DATE,

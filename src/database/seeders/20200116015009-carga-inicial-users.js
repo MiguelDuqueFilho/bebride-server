@@ -25,7 +25,7 @@ module.exports = {
         user_type: 3
       },
       {
-        user_name: "Cliente cadastrado somente do Site",
+        user_name: "Cliente ",
         user_email: "cliente@globo.com",
         password_hash:
           "$2a$08$LoCjPaMb2nJvSHlxougvbOjuRONf4zIbKv4oG2HXdi.lyNk5Vq5RO",
