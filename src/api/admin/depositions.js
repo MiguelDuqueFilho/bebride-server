@@ -1,4 +1,3 @@
-const path = require("path");
 const { errorHandler, returnsData } = require("../../util/respHandler");
 const { existsOrError } = require("../../util/validation");
 const { Deposition } = require("../../app/models");

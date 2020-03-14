@@ -1,4 +1,6 @@
 "use strict";
+const sequelizePaginate = require("sequelize-paginate");
+
 module.exports = (sequelize, DataTypes) => {
   const Deposition = sequelize.define(
     "Deposition",
@@ -14,5 +16,6 @@ module.exports = (sequelize, DataTypes) => {
   Deposition.associate = function(models) {
     // associations can be defined here
   };
+  sequelizePaginate.paginate(Deposition);
   return Deposition;
 };

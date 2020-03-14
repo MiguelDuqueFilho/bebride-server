@@ -3,9 +3,9 @@ const {
   isAuthenticated,
   isAuthenticatedAdmin
 } = require("../app/middlewares/auth");
-const dashboard = require("../api/admin/dashboard");
-const downloads = require("../api/admin/downloads");
-const depositions = require("../api/admin/depositions");
+const dashboard = require("../api/admin/Dashboard");
+const downloads = require("../api/admin/Downloads");
+const depositions = require("../api/admin/Depositions");
 const events = require("../api/admin/Events");
 
 routes.get("/eventtypes", events.getTypes);
@@ -20,6 +20,8 @@ routes.get("/depositions", isAuthenticated, depositions.get);
 routes.post("/depositions", isAuthenticatedAdmin, depositions.save);
 routes.put("/depositions/:id", isAuthenticatedAdmin, depositions.update);
 routes.delete("/depositions/:id", isAuthenticatedAdmin, depositions.delete);
+
+routes.post("/uploads", downloads.upload);
 
 routes.get("/downloads/:file(*)", isAuthenticated, downloads.getFile);
 routes.get("/downloads", isAuthenticated, downloads.get);

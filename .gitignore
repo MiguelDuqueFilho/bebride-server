@@ -2,4 +2,5 @@
 .env.remote
 .env.test
 node_modules
-
+src/downloads  
+src/uploads
