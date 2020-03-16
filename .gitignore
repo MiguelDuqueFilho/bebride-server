@@ -1,6 +1,6 @@
+src/downloads/*
+src/uploads/*
 .env
 .env.remote
 .env.test
 node_modules
-src/downloads  
-src/uploads

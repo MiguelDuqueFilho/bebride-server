@@ -22,7 +22,7 @@ git push -u origin master
 commands sequelize:
 yarn sequelize init
 
-yarn sequelize-cli model:generate --name create-UserPasswordRecoveries --attributes firstName:string,lastName:string,email:string
+yarn sequelize model:generate --name create-uploads --attributes fileName:string,fileType:string,filePath:string,fileSize:integer  
 
 yarn sequelize db:migrate
 yarn sequelize db:migrate:undo
