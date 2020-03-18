@@ -23,6 +23,11 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         defaultValue: false
       },
+      download_upload_id: {
+        type: Sequelize.INTEGER(11),
+        allowNull: false,
+        defaultValue: 0
+      },
       created_at: {
         type: Sequelize.DATE,
         allowNull: false,

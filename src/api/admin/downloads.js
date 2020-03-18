@@ -4,7 +4,6 @@ const { errorHandler, returnsData } = require("../../util/respHandler");
 const { existsOrError } = require("../../util/validation");
 const { Download } = require("../../app/models");
 const { Upload } = require("../../app/models");
-const { IncomingForm } = require("formidable");
 
 class DownloadsController {
   async getAll(req, res) {
@@ -20,7 +19,8 @@ class DownloadsController {
           "downloadTitle",
           "downloadDescription",
           "downloadFilename",
-          "downloadShow"
+          "downloadShow",
+          "downloadUploadId"
         ]
       });
       resp.page = page;
@@ -38,7 +38,8 @@ class DownloadsController {
         "id",
         "downloadTitle",
         "downloadDescription",
-        "downloadFilename"
+        "downloadFilename",
+        "downloadUploadId"
       ],
       where: { downloadShow: true }
     })
@@ -58,18 +59,61 @@ class DownloadsController {
     try {
       existsOrError(download.downloadTitle, "Titulo não informado");
       existsOrError(download.downloadDescription, "Descrição não informado");
-      existsOrError(download.downloadFilename, "Filename não informado.");
+      existsOrError(
+        download.downloadFilename,
+        "Filename de Upload não informado."
+      );
+      existsOrError(download.downloadUploadId, "id de Upload não informado.");
     } catch (err) {
       return res.status(400).send(errorHandler(err));
     }
 
     try {
-      await Download.create({
+      const downloadFromDb = await Download.create({
         downloadTitle: download.downloadTitle,
         downloadDescription: download.downloadDescription,
         downloadFilename: download.downloadFilename,
-        downloadShow: download.downloadShow
+        downloadShow: download.downloadShow,
+        downloadUploadId: download.downloadUploadId
       });
+
+      if (!downloadFromDb) {
+        return res
+          .status(500)
+          .send(errorHandler("Erro ao inserir o download."));
+      }
+      const uploadFromDb = await Upload.findOne({
+        attributes: [
+          "id",
+          "fileName",
+          "fileType",
+          "filePath",
+          "fileSize",
+          "fileUse"
+        ],
+        where: { id: download.downloadUploadId }
+      });
+
+      if (!uploadFromDb) {
+        return res.status(500).send(errorHandler("upload não encontrado"));
+      }
+
+      const fileLocationOrig = uploadFromDb.filePath;
+      const fileLocationDest = path.join(
+        "src/downloads",
+        `download_${downloadFromDb.id}.${uploadFromDb.fileType}`
+      );
+
+      fs.access(fileLocationOrig, error => {
+        if (!error) {
+          fs.copyFileSync(fileLocationOrig, fileLocationDest);
+        } else {
+          return res
+            .status(400)
+            .send(errorHandler("Arquivo upload não encontrado!!", error));
+        }
+      });
+
       res.status(200).send(returnsData("Consulta Realizada!!", null));
     } catch (err) {
       console.log(err);
@@ -93,6 +137,11 @@ class DownloadsController {
         existsOrError(download.downloadTitle, "Titulo não informado");
         existsOrError(download.downloadDescription, "Descrição não informado");
         existsOrError(download.downloadFilename, "Filename não informado.");
+        existsOrError(
+          download.downloadFilename,
+          "Filename de Upload não informado."
+        );
+        existsOrError(download.downloadUploadId, "id de Upload não informado.");
       } catch (err) {
         return res.status(400).send(errorHandler(err));
       }
@@ -102,8 +151,44 @@ class DownloadsController {
     }
 
     try {
-      await Download.update(download, {
+      const downloadFromDb = await Download.update(download, {
         where: { id: download.id }
+      });
+      if (!downloadFromDb) {
+        return res
+          .status(500)
+          .send(errorHandler("Erro ao atualizar o download."));
+      }
+      const uploadFromDb = await Upload.findOne({
+        attributes: [
+          "id",
+          "fileName",
+          "fileType",
+          "filePath",
+          "fileSize",
+          "fileUse"
+        ],
+        where: { id: download.downloadUploadId }
+      });
+
+      if (!uploadFromDb) {
+        return res.status(500).send(errorHandler("upload não encontrado"));
+      }
+
+      const fileLocationOrig = uploadFromDb.filePath;
+      const fileLocationDest = path.join(
+        "src/downloads",
+        `download_${download.id}.${uploadFromDb.fileType}`
+      );
+
+      fs.access(fileLocationOrig, error => {
+        if (!error) {
+          fs.copyFileSync(fileLocationOrig, fileLocationDest);
+        } else {
+          return res
+            .status(400)
+            .send(errorHandler("Arquivo upload não encontrado!!", error));
+        }
       });
 
       Download.findAll({
@@ -129,13 +214,26 @@ class DownloadsController {
       });
       existsOrError(downloadDelDB, "Download Não encontrado!");
 
+      const uploadFromDb = await Upload.findOne({
+        attributes: [
+          "id",
+          "fileName",
+          "fileType",
+          "filePath",
+          "fileSize",
+          "fileUse"
+        ],
+        where: { id: downloadFromDB.downloadUploadId }
+      });
+
+      if (!uploadFromDb) {
+        return res.status(500).send(errorHandler("upload não encontrado"));
+      }
+
       var fileLocation = path.join(
         "src/downloads",
-        downloadFromDB.downloadFilename
+        `download_${id}.${uploadFromDb.fileType}`
       );
-
-      console.log("fileLocation>>>>>>>>");
-      console.log(fileLocation);
 
       fs.access(fileLocation, error => {
         if (!error) {

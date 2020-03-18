@@ -36,6 +36,7 @@ class UploadsController {
     const { type } = req.params;
     try {
       const resp = await Upload.findAll({
+        where: { fileType: type, fileUse: false },
         attributes: [
           "id",
           "fileName",
@@ -43,8 +44,7 @@ class UploadsController {
           "filePath",
           "fileSize",
           "fileUse"
-        ],
-        where: { fileType: type, fileUse: false }
+        ]
       });
       res.status(200).send(returnsData("Consulta Realizada!!", resp));
     } catch (error) {
@@ -150,6 +150,7 @@ class UploadsController {
       let type = file.type;
       type = type.replace("application/", "");
       type = type.replace("image/", "");
+      type = type.replace("video/", "");
 
       Upload.create({
         fileName: file.name,

@@ -8,7 +8,8 @@ module.exports = (sequelize, DataTypes) => {
       downloadTitle: DataTypes.STRING,
       downloadDescription: DataTypes.STRING,
       downloadFilename: DataTypes.STRING,
-      downloadShow: DataTypes.BOOLEAN
+      downloadShow: DataTypes.BOOLEAN,
+      downloadUploadId: DataTypes.INTEGER
     },
     {}
   );
