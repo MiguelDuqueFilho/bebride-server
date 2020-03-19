@@ -4,6 +4,7 @@ const { errorHandler, returnsData } = require("../../util/respHandler");
 const { existsOrError } = require("../../util/validation");
 const { Download } = require("../../app/models");
 const { Upload } = require("../../app/models");
+const { extractFileType } = require("../../util/utils");
 
 class DownloadsController {
   async getAll(req, res) {
@@ -254,11 +255,23 @@ class DownloadsController {
     }
   }
 
-  getFile(req, res) {
+  async getFile(req, res) {
     var file = req.params.file;
-    var fileLocation = path.join("src/downloads", file);
 
-    res.download(fileLocation, file);
+    const downloadFromDB = await Download.findOne({
+      where: { id: file }
+    });
+
+    if (!downloadFromDB) {
+      return res.status(500).send(errorHandler("Download não encontrado"));
+    }
+    const filename = extractFileType(downloadFromDB.downloadFilename);
+    var fileLocation = path.join(
+      "src/downloads",
+      `download_${file}.${filename}`
+    );
+    console.log(fileLocation);
+    res.download(fileLocation, downloadFromDB.downloadFilename);
   }
 }
 module.exports = new DownloadsController();
