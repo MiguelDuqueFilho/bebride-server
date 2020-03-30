@@ -3,9 +3,6 @@ if (process.env.NODE_ENV !== "production") {
     case "development":
       require("dotenv").config({ path: ".env" });
       break;
-    case "remote":
-      require("dotenv").config({ path: ".env.remote" });
-      break;
     case "test":
       require("dotenv").config({ path: ".env.test" });
       break;
@@ -22,6 +19,7 @@ module.exports = {
     host: process.env.SERVER_HOST,
     port: process.env.SERVER_PORT
   },
+  frontUrl: process.env.FRONT_URL,
   email: {
     host: process.env.EMAIL_HOST,
     port: process.env.EMAIL_PORT,

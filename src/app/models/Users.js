@@ -16,10 +16,6 @@ module.exports = (sequelize, DataTypes) => {
         type: String,
         select: false
       },
-      passwordResetExpires: {
-        type: Date,
-        select: false
-      },
       remoteResetIp: {
         type: String,
         select: false
@@ -58,6 +54,23 @@ module.exports = (sequelize, DataTypes) => {
       token: jwt.sign(payload, authSecret)
     };
   };
+
+  User.prototype.generateResetToken = function() {
+    const now = Math.floor(Date.now() / 1000);
+
+    const payload = {
+      id: this.id,
+      iat: now,
+      exp: now + 60 * 1 // expire 1 hour
+    };
+
+    const secret = this.passwordHash + "-" + this.createdAt;
+
+    const token = jwt.sign(payload, secret);
+
+    return token;
+  };
+
   sequelizePaginate.paginate(User);
   return User;
 };

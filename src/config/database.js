@@ -3,9 +3,6 @@ if (process.env.NODE_ENV !== "production") {
     case "development":
       require("dotenv").config({ path: ".env" });
       break;
-    case "remote":
-      require("dotenv").config({ path: ".env.remote" });
-      break;
     case "test":
       require("dotenv").config({ path: ".env.test" });
       break;

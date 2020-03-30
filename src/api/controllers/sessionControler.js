@@ -1,10 +1,9 @@
 const { User } = require("../../app/models");
 const { existsOrError, equalsOrError } = require("../../util/validation");
 const { errorHandler, returnsData } = require("../../util/respHandler");
-const { authSecret } = require("../../config/config");
+const { authSecret, frontUrl } = require("../../config/config");
 const jwt = require("jsonwebtoken");
 const { promisify } = require("util");
-const crypto = require("crypto");
 const mailer = require("../../app/modules/mailer");
 
 class SessionController {
@@ -94,28 +93,25 @@ class SessionController {
 
       existsOrError(user, "Usuário não cadastrado");
 
-      const token = crypto.randomBytes(20).toString("hex");
-
-      const now = new Date();
-
-      now.setHours(now.getHours() + 1);
+      const token = user.generateResetToken();
 
       await User.update(
         {
-          passwordResetToken: token,
-          passwordResetExpires: now
+          passwordResetToken: token
         },
         {
           where: { id: user.id }
         }
       );
 
+      const resetPasswordUrl = `${frontUrl}/recovery_password/${token}`;
+
       const info = await mailer.sendMail({
         to: userEmail,
         from: "miguel.duque@globo.com",
         subject: "Esqueci minha senha",
         template: "forgot_password",
-        context: { name: user.userName, token }
+        context: { name: user.userName, link: resetPasswordUrl }
       });
 
       return res.send(returnsData("Email enviado...", info));
@@ -123,23 +119,20 @@ class SessionController {
       return res.status(400).send(errorHandler(err));
     }
   }
-  async resetPassword(req, res) {
-    const { userEmail, token, password } = req.body;
 
+  async resetPassword(req, res) {
+    const { token, password, confirmPassword } = req.body;
     try {
       const user = await User.findOne({
-        where: { userEmail }
+        where: { passwordResetToken: token }
       });
+      existsOrError(user, "Token invalido.");
+      const secret = user.passwordHash + "-" + user.createdAt;
 
-      existsOrError(user, "Usuário não cadastrado");
+      const decode = await promisify(jwt.verify)(token, secret);
 
-      if (token !== user.passwordResetToken) {
-        return res.status(400).send(errorHandler("token invalido!"));
-      }
-
-      const now = Date();
-      if (now > user.passwordResetExpires) {
-        return res.status(400).send(errorHandler("token expirado!"));
+      if (password !== confirmPassword) {
+        return res.status(400).send(errorHandler("Password não coferem!!!"));
       }
 
       user.password = password;
@@ -147,8 +140,7 @@ class SessionController {
       await User.update(
         {
           password,
-          passwordResetToken: null,
-          passwordResetExpires: null
+          passwordResetToken: null
         },
         { where: { id: user.id }, individualHooks: true }
       );
@@ -171,9 +163,6 @@ class SessionController {
     });
 
     return res.send(returnsData("Email enviado...", info));
-  }
-  catch(err) {
-    return res.status(400).send(errorHandler(err));
   }
 }
 
