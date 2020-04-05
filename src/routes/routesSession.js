@@ -10,5 +10,10 @@ routes.post("/forgot_password", SessionController.forgotPassword);
 routes.post("/reset_password", SessionController.resetPassword);
 
 routes.get("/logoff", isAuthenticated, SessionController.logoff);
+routes.post(
+  "/change_password",
+  isAuthenticated,
+  SessionController.changePassword
+);
 
 module.exports = routes;

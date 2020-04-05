@@ -22,7 +22,7 @@ git push -u origin master
 commands sequelize:
 yarn sequelize init
 
-yarn sequelize model:generate --name create-uploads --attributes fileName:string,fileType:string,filePath:string,fileSize:integer  
+yarn sequelize model:generate --name uploads --attributes fileName:string,fileType:string,filePath:string
 
 yarn sequelize db:migrate
 yarn sequelize db:migrate:undo

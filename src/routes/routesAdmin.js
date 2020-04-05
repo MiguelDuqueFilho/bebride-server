@@ -1,18 +1,28 @@
 const routes = require("express").Router();
 const {
   isAuthenticated,
-  isAuthenticatedAdmin
+  isAuthenticatedAdmin,
 } = require("../app/middlewares/auth");
+const users = require("../api/admin/user");
 const dashboard = require("../api/admin/Dashboard");
 const downloads = require("../api/admin/Downloads");
 const uploads = require("../api/admin/Uploads");
 const depositions = require("../api/admin/Depositions");
 const events = require("../api/admin/Events");
+const tasks = require("../api/admin/Tasks");
 
 routes.get("/eventtypes", events.getTypes);
 routes.get("/eventstatus", events.getStatus);
 
 // Autorizados por autenticação
+
+routes
+  .get("/users/:id", isAuthenticatedAdmin, users.getById)
+  .put("/users/:id", isAuthenticatedAdmin, users.update)
+  .delete("/users/:id", isAuthenticatedAdmin, users.delete);
+
+routes.get("/users", isAuthenticatedAdmin, users.get);
+routes.post("/users", isAuthenticatedAdmin, users.save);
 
 routes.get("/dashboard", isAuthenticated, dashboard.get);
 
@@ -42,5 +52,10 @@ routes.get("/events", isAuthenticatedAdmin, events.get);
 routes.post("/events", isAuthenticatedAdmin, events.save);
 routes.put("/events/:id", isAuthenticatedAdmin, events.update);
 routes.delete("/events/:id", isAuthenticatedAdmin, events.delete);
+
+routes.get("/tasks", isAuthenticatedAdmin, tasks.get);
+routes.post("/tasks", isAuthenticatedAdmin, tasks.save);
+routes.put("/tasks/:id", isAuthenticatedAdmin, tasks.update);
+routes.delete("/tasks/:id", isAuthenticatedAdmin, tasks.delete);
 
 module.exports = routes;

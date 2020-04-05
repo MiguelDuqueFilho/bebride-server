@@ -151,6 +151,32 @@ class SessionController {
     }
   }
 
+  async changePassword(req, res) {
+    const { id, password, confirmPassword } = req.body;
+    try {
+      const user = await User.findOne({
+        where: { id }
+      });
+
+      if (password !== confirmPassword) {
+        return res.status(400).send(errorHandler("Password não coferem!!!"));
+      }
+
+      user.password = password;
+
+      await User.update(
+        {
+          password
+        },
+        { where: { id }, individualHooks: true }
+      );
+
+      return res.status(200).send(returnsData("Senha alterada com sucesso"));
+    } catch (err) {
+      return res.status(400).send(errorHandler(err));
+    }
+  }
+
   async sendEmail(req, res) {
     const { userName, userEmail, messageEmail } = req.body;
 
