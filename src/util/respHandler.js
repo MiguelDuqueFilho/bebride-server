@@ -2,7 +2,7 @@ module.exports.returnsData = (message = "", data = null) => {
   const RespSchema = {
     success: true,
     message,
-    data
+    data,
   };
 
   return RespSchema;
@@ -12,7 +12,7 @@ module.exports.errorHandler = (message, errors = "Sem Detalhes") => {
   let ErrorSchema = {
     success: false,
     message,
-    errors
+    errors,
   };
 
   if (message.details === "validatedError") {
@@ -46,28 +46,40 @@ module.exports.errorHandler = (message, errors = "Sem Detalhes") => {
   return ErrorSchema;
 };
 
-// const _ = require("lodash");
+module.exports.errorCodeHandler = (message, errors = "Sem Detalhes") => {
+  let ErrorCodeSchema = {
+    statusCode: 400,
+    message,
+    errors,
+  };
 
-// module.exports = (err, req, res, next) => {
-//   console.log(`>> err in err.message =  ${err.message}`);
-//   console.log(`>> err in err.message.name  =  ${err.message.name}`);
-//   // const bundle = res.locals.bundle;
-//   // if (bundle.errors) {
-//   //   const errors = parserErrors(bundle.errors);
-//   //   res.status(500).json({ errors });
-//   // } else {
-//   console.log(`>> ErrorHandle xx next() =  ${err.statusCode}`);
-//   next(err);
-// };
+  if (message.details === "validatedError") {
+    ErrorCodeSchema = message;
+  }
 
-// const parserErrors = nodeRestfullErrors => {
-//   const errors = [];
-//   // filtrar erros
-//   _.forIn(nodeRestfullErrors, error => errors.push(errors.message));
+  if (
+    typeof message.name !== "undefined" &&
+    message.name.startsWith("Sequelize")
+  ) {
+    switch (message.name) {
+      case "SequelizeConnectionRefusedError":
+        ErrorCodeSchema.message = "Banco de dados inativo...";
+        break;
+      case "SequelizeConnectionError":
+        ErrorCodeSchema.message = "Erro de Conecção Banco de dados...";
+        break;
+      case "SequelizeUniqueConstraintError":
+        ErrorCodeSchema.message = message.errors[0].message;
+        break;
+      default:
+        ErrorCodeSchema.message = "default Error Database...";
+        if (process.env.NODE_ENV !== "production") {
+          ErrorCodeSchema.errors = message;
+        } else {
+          ErrorCodeSchema.errors = message.name;
+        }
+    }
+  }
 
-//   errors = nodeRestfullErrors;
-//   //
-//   console.log(`>> ErrorHandle in bundle.errors =  ${errors}`);
-
-//   return errors;
-// };
+  return ErrorCodeSchema;
+};

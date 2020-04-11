@@ -23,11 +23,6 @@ module.exports = {
         allowNull: true,
         defaultValue: 0,
       },
-      person_id: {
-        type: Sequelize.INTEGER(11),
-        allowNull: false,
-        defaultValue: 0,
-      },
       task_name: {
         type: Sequelize.STRING,
       },

@@ -1,4 +1,5 @@
 const routes = require("express").Router();
+
 const {
   isAuthenticated,
   isAuthenticatedAdmin,
@@ -9,7 +10,13 @@ const downloads = require("../api/admin/Downloads");
 const uploads = require("../api/admin/Uploads");
 const depositions = require("../api/admin/Depositions");
 const events = require("../api/admin/Events");
-const tasks = require("../api/admin/Tasks");
+const {
+  task,
+  getTaskValidate,
+  saveTaskValidate,
+  updateTaskValidate,
+  deleteTaskValidate,
+} = require("../api/admin/Tasks");
 
 routes.get("/eventtypes", events.getTypes);
 routes.get("/eventstatus", events.getStatus);
@@ -49,13 +56,21 @@ routes.put("/downloads/:id", isAuthenticatedAdmin, downloads.update);
 routes.delete("/downloads/:id", isAuthenticatedAdmin, downloads.delete);
 
 routes.get("/events", isAuthenticatedAdmin, events.get);
+routes.get("/events/:id", isAuthenticatedAdmin, events.getById);
 routes.post("/events", isAuthenticatedAdmin, events.save);
 routes.put("/events/:id", isAuthenticatedAdmin, events.update);
 routes.delete("/events/:id", isAuthenticatedAdmin, events.delete);
 
-routes.get("/tasks", isAuthenticatedAdmin, tasks.get);
-routes.post("/tasks", isAuthenticatedAdmin, tasks.save);
-routes.put("/tasks/:id", isAuthenticatedAdmin, tasks.update);
-routes.delete("/tasks/:id", isAuthenticatedAdmin, tasks.delete);
+routes.get("/tasks/sections", task.getSections);
+routes.get("/tasks/status", task.getStatus);
+routes.get("/tasks", isAuthenticatedAdmin, getTaskValidate, task.get);
+routes.post("/tasks", isAuthenticatedAdmin, saveTaskValidate, task.save);
+routes.put("/tasks/:id", isAuthenticatedAdmin, updateTaskValidate, task.update);
+routes.delete(
+  "/tasks/:id",
+  isAuthenticatedAdmin,
+  deleteTaskValidate,
+  task.delete
+);
 
 module.exports = routes;

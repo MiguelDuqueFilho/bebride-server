@@ -1,8 +1,8 @@
-module.exports.existsOrError = function(value, msg) {
+module.exports.existsOrError = function (value, msg) {
   const ErrorSchema = {
     success: false,
     message: msg,
-    details: "validatedError"
+    details: "validatedError",
   };
 
   if (!value) throw ErrorSchema;
@@ -10,11 +10,11 @@ module.exports.existsOrError = function(value, msg) {
   if (typeof value === "string" && !value.trim()) throw ErrorSchema;
 };
 
-module.exports.notExistsOrError = function(value, msg) {
+module.exports.notExistsOrError = function (value, msg) {
   const ErrorSchema = {
-    success: false,
+    statusCode: 400,
     message: msg,
-    details: "validatedError"
+    details: "validatedError",
   };
 
   try {
@@ -25,11 +25,11 @@ module.exports.notExistsOrError = function(value, msg) {
   throw ErrorSchema;
 };
 
-module.exports.equalsOrError = function(valueA, valueB, msg) {
+module.exports.equalsOrError = function (valueA, valueB, msg) {
   const ErrorSchema = {
     success: false,
     message: msg,
-    details: "validatedError"
+    details: "validatedError",
   };
 
   if (valueA !== valueB) throw ErrorSchema;

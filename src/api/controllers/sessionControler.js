@@ -50,7 +50,7 @@ class SessionController {
     }
 
     let userFromDB = await User.findOne({
-      where: { userEmail: user.userEmail }
+      where: { userEmail: user.userEmail },
     });
 
     if (userFromDB) {
@@ -60,17 +60,17 @@ class SessionController {
     const userNewDB = await User.create({
       userName: user.userName,
       userEmail: user.userEmail,
-      password: user.password
+      password: user.password,
     });
 
     User.findAll({
       attributes: ["id", "userName", "userEmail", "userType"],
-      where: { id: userNewDB.id }
+      where: { id: userNewDB.id },
     })
-      .then(user => {
+      .then((user) => {
         res.send(returnsData("Usuário incuido com sucesso!", user));
       })
-      .catch(err => {
+      .catch((err) => {
         res.status(500).send(errorHandler(err));
       });
   }
@@ -79,7 +79,7 @@ class SessionController {
     return res.status(200).json(
       returnsData("Usuário Logoff", {
         name: req.decode.name,
-        email: req.decode.email
+        email: req.decode.email,
       })
     );
   }
@@ -88,7 +88,7 @@ class SessionController {
     const { userEmail } = req.body;
     try {
       const user = await User.findOne({
-        where: { userEmail }
+        where: { userEmail },
       });
 
       existsOrError(user, "Usuário não cadastrado");
@@ -97,10 +97,10 @@ class SessionController {
 
       await User.update(
         {
-          passwordResetToken: token
+          passwordResetToken: token,
         },
         {
-          where: { id: user.id }
+          where: { id: user.id },
         }
       );
 
@@ -111,7 +111,7 @@ class SessionController {
         from: "miguel.duque@globo.com",
         subject: "Esqueci minha senha",
         template: "forgot_password",
-        context: { name: user.userName, link: resetPasswordUrl }
+        context: { name: user.userName, link: resetPasswordUrl },
       });
 
       return res.send(returnsData("Email enviado...", info));
@@ -124,7 +124,7 @@ class SessionController {
     const { token, password, confirmPassword } = req.body;
     try {
       const user = await User.findOne({
-        where: { passwordResetToken: token }
+        where: { passwordResetToken: token },
       });
       existsOrError(user, "Token invalido.");
       const secret = user.passwordHash + "-" + user.createdAt;
@@ -140,7 +140,8 @@ class SessionController {
       await User.update(
         {
           password,
-          passwordResetToken: null
+          passwordResetToken: null,
+          remoteResetIp: req.connection.remoteAddress,
         },
         { where: { id: user.id }, individualHooks: true }
       );
@@ -155,7 +156,7 @@ class SessionController {
     const { id, password, confirmPassword } = req.body;
     try {
       const user = await User.findOne({
-        where: { id }
+        where: { id },
       });
 
       if (password !== confirmPassword) {
@@ -166,7 +167,7 @@ class SessionController {
 
       await User.update(
         {
-          password
+          password,
         },
         { where: { id }, individualHooks: true }
       );
@@ -185,7 +186,7 @@ class SessionController {
       from: "miguel.duque@globo.com",
       subject: "Dúvidas e Sugestões",
       template: "doubts",
-      context: { userName, userEmail, messageEmail }
+      context: { userName, userEmail, messageEmail },
     });
 
     return res.send(returnsData("Email enviado...", info));

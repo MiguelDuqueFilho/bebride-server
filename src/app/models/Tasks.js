@@ -9,7 +9,6 @@ module.exports = (sequelize, DataTypes) => {
       eventId: DataTypes.INTEGER,
       taskModelId: DataTypes.INTEGER,
       taskSectionId: DataTypes.INTEGER,
-      personId: DataTypes.INTEGER,
       taskName: DataTypes.STRING,
       taskDescription: DataTypes.STRING,
       taskDuration: DataTypes.INTEGER,
@@ -21,9 +20,23 @@ module.exports = (sequelize, DataTypes) => {
       taskSuccessor: DataTypes.INTEGER,
       taskStatusId: DataTypes.INTEGER,
     },
-    {}
+    {
+      hooks: {
+        beforeSave: async (task) => {
+          if (task.taskDuration === 0) {
+            task.taskFinish = task.taskStart;
+          } else {
+            task.taskTime = "00:00:00";
+          }
+        },
+      },
+    }
   );
   Task.associate = function (models) {
+    Task.hasMany(models.Event, {
+      sourceKey: "eventId",
+      foreignKey: "id",
+    });
     Task.hasMany(models.TaskSection, {
       sourceKey: "taskSectionId",
       foreignKey: "id",
