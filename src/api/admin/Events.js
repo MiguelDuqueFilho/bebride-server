@@ -1,17 +1,20 @@
 const { Event, EventStatu, EventType } = require("../../app/models");
 const { existsOrError, equalsOrError } = require("../../util/validation");
-
+const { querySearchEvent } = require("../../util/utils");
 const { errorHandler, returnsData } = require("../../util/respHandler");
 
 class EventsController {
   async get(req, res) {
     const page = parseInt(req.query.page) || 1;
     const paginate = parseInt(req.query.limit) || 1;
+    const search = req.query.search;
 
+    const where = querySearchEvent(search);
     try {
       const resp = await Event.paginate({
         page,
         paginate,
+        where,
         include: [
           {
             model: EventType,
