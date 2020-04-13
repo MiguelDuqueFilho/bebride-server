@@ -33,7 +33,7 @@ routes.post("/users", isAuthenticatedAdmin, users.save);
 
 routes.get("/dashboard", isAuthenticated, dashboard.get);
 
-routes.get("/depositions_all", isAuthenticatedAdmin, depositions.getAll);
+routes.get("/depositions/all", isAuthenticatedAdmin, depositions.getAll);
 routes.get("/depositions", isAuthenticated, depositions.get);
 routes.post("/depositions", isAuthenticatedAdmin, depositions.save);
 routes.put("/depositions/:id", isAuthenticatedAdmin, depositions.update);

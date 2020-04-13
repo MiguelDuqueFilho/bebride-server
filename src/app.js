@@ -7,6 +7,7 @@ const timeScan = require("./app/middlewares/timeScan");
 const errorCustom = require("./app/middlewares/errorCustom");
 const routesSession = require("./routes/routesSession");
 const routesAdmin = require("./routes/routesAdmin");
+const routesSite = require("./routes/routesSite");
 
 class AppController {
   constructor() {
@@ -31,6 +32,7 @@ class AppController {
   }
 
   routes() {
+    this.express.use(routesSite);
     this.express.use(routesSession);
     this.express.use(routesAdmin);
   }

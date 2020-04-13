@@ -17,6 +17,7 @@ class TasksController {
         page,
         paginate,
         where,
+        order: [["taskStart", "DESC"]],
         attributes: [
           "id",
           "eventId",

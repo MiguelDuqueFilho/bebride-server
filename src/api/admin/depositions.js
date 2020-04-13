@@ -1,23 +1,30 @@
+const path = require("path");
 const { errorHandler, returnsData } = require("../../util/respHandler");
 const { existsOrError } = require("../../util/validation");
-const { Deposition } = require("../../app/models");
+const { Deposition, Event } = require("../../app/models");
 
 class DepositionsController {
   getAll(req, res) {
     Deposition.findAll({
       attributes: [
         "id",
-        "event_id",
+        "eventId",
         "depositionTitle",
         "depositionDescription",
         "depositionUrlphoto",
-        "depositionShow"
-      ]
+        "depositionShow",
+      ],
+      include: [
+        {
+          model: Event,
+          attributes: ["eventName"],
+        },
+      ],
     })
-      .then(dep =>
+      .then((dep) =>
         res.status(200).send(returnsData("Consulta Realizada!!", dep))
       )
-      .catch(err =>
+      .catch((err) =>
         res
           .status(500)
           .send(errorHandler("Erro na consulta de depoimentos...", err))
@@ -25,19 +32,28 @@ class DepositionsController {
   }
   get(req, res) {
     Deposition.findAll({
+      limit: 4,
+      where: { depositionShow: true },
+      order: [["updatedAt", "DESC"]],
       attributes: [
         "id",
-        "event_id",
+        "eventId",
         "depositionTitle",
         "depositionDescription",
-        "depositionUrlphoto"
+        "depositionUrlphoto",
+        "updatedAt",
       ],
-      where: { depositionShow: true }
+      include: [
+        {
+          model: Event,
+          attributes: ["eventName"],
+        },
+      ],
     })
-      .then(dep =>
+      .then((dep) =>
         res.status(200).send(returnsData("Consulta Realizada!!", dep))
       )
-      .catch(err =>
+      .catch((err) =>
         res
           .status(500)
           .send(errorHandler("Erro na consulta de depoimentos...", err))
@@ -61,7 +77,7 @@ class DepositionsController {
         depositionTitle: deposition.depositionTitle,
         depositionDescription: deposition.depositionDescription,
         depositionUrlphoto: deposition.depositionUrlphoto,
-        depositionShow: deposition.depositionShow
+        depositionShow: deposition.depositionShow,
       });
       res.status(200).send(returnsData("Depoimento incluido!!", null));
     } catch (err) {
@@ -74,7 +90,7 @@ class DepositionsController {
     if (req.params.id) deposition.id = req.params.id;
     try {
       const depositionFromDB = await Deposition.findOne({
-        where: { id: deposition.id }
+        where: { id: deposition.id },
       });
 
       if (!depositionFromDB) {
@@ -101,14 +117,14 @@ class DepositionsController {
 
     try {
       await Deposition.update(deposition, {
-        where: { id: deposition.id }
+        where: { id: deposition.id },
       });
 
       Deposition.findAll({
-        where: { id: deposition.id }
+        where: { id: deposition.id },
       })
-        .then(dep => res.send(returnsData("Depoimento Atualizado!!", dep)))
-        .catch(err => res.status(500).send(errorHandler(err)));
+        .then((dep) => res.send(returnsData("Depoimento Atualizado!!", dep)))
+        .catch((err) => res.status(500).send(errorHandler(err)));
     } catch (err) {
       return res.status(500).json(errorHandler(err));
     }
@@ -119,7 +135,7 @@ class DepositionsController {
 
     try {
       const depositionFromDB = await Deposition.destroy({
-        where: { id }
+        where: { id },
       });
       existsOrError(depositionFromDB, "Depoimento Não encontrado!");
 

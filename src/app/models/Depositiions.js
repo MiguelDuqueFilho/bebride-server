@@ -5,16 +5,19 @@ module.exports = (sequelize, DataTypes) => {
   const Deposition = sequelize.define(
     "Deposition",
     {
-      EventId: DataTypes.INTEGER,
+      eventId: DataTypes.INTEGER,
       depositionTitle: DataTypes.STRING,
       depositionDescription: DataTypes.TEXT,
       depositionUrlphoto: DataTypes.STRING,
-      depositionShow: DataTypes.BOOLEAN
+      depositionShow: DataTypes.BOOLEAN,
     },
     {}
   );
-  Deposition.associate = function(models) {
-    // associations can be defined here
+  Deposition.associate = function (models) {
+    Deposition.hasMany(models.Event, {
+      sourceKey: "eventId",
+      foreignKey: "id",
+    });
   };
   sequelizePaginate.paginate(Deposition);
   return Deposition;

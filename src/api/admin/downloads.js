@@ -21,8 +21,8 @@ class DownloadsController {
           "downloadDescription",
           "downloadFilename",
           "downloadShow",
-          "downloadUploadId"
-        ]
+          "downloadUploadId",
+        ],
       });
       resp.page = page;
       res.status(200).send(returnsData("Consulta Realizada!!", resp));
@@ -40,14 +40,14 @@ class DownloadsController {
         "downloadTitle",
         "downloadDescription",
         "downloadFilename",
-        "downloadUploadId"
+        "downloadUploadId",
       ],
-      where: { downloadShow: true }
+      where: { downloadShow: true },
     })
-      .then(file =>
+      .then((file) =>
         res.status(200).send(returnsData("Consulta Realizada!!", file))
       )
-      .catch(err =>
+      .catch((err) =>
         res
           .status(500)
           .send(errorHandler("Erro na consulta de downloads...", err))
@@ -75,7 +75,7 @@ class DownloadsController {
         downloadDescription: download.downloadDescription,
         downloadFilename: download.downloadFilename,
         downloadShow: download.downloadShow,
-        downloadUploadId: download.downloadUploadId
+        downloadUploadId: download.downloadUploadId,
       });
 
       if (!downloadFromDb) {
@@ -90,9 +90,9 @@ class DownloadsController {
           "fileType",
           "filePath",
           "fileSize",
-          "fileUse"
+          "fileUse",
         ],
-        where: { id: download.downloadUploadId }
+        where: { id: download.downloadUploadId },
       });
 
       if (!uploadFromDb) {
@@ -105,7 +105,7 @@ class DownloadsController {
         `download_${downloadFromDb.id}.${uploadFromDb.fileType}`
       );
 
-      fs.access(fileLocationOrig, error => {
+      fs.access(fileLocationOrig, (error) => {
         if (!error) {
           fs.copyFileSync(fileLocationOrig, fileLocationDest);
         } else {
@@ -127,7 +127,7 @@ class DownloadsController {
     if (req.params.id) download.id = req.params.id;
     try {
       const downloadFromDB = await Download.findOne({
-        where: { id: download.id }
+        where: { id: download.id },
       });
 
       if (!downloadFromDB) {
@@ -153,7 +153,7 @@ class DownloadsController {
 
     try {
       const downloadFromDb = await Download.update(download, {
-        where: { id: download.id }
+        where: { id: download.id },
       });
       if (!downloadFromDb) {
         return res
@@ -167,9 +167,9 @@ class DownloadsController {
           "fileType",
           "filePath",
           "fileSize",
-          "fileUse"
+          "fileUse",
         ],
-        where: { id: download.downloadUploadId }
+        where: { id: download.downloadUploadId },
       });
 
       if (!uploadFromDb) {
@@ -182,7 +182,7 @@ class DownloadsController {
         `download_${download.id}.${uploadFromDb.fileType}`
       );
 
-      fs.access(fileLocationOrig, error => {
+      fs.access(fileLocationOrig, (error) => {
         if (!error) {
           fs.copyFileSync(fileLocationOrig, fileLocationDest);
         } else {
@@ -193,10 +193,10 @@ class DownloadsController {
       });
 
       Download.findAll({
-        where: { id: download.id }
+        where: { id: download.id },
       })
-        .then(file => res.send(returnsData("Download Atualizado!!", file)))
-        .catch(err => res.status(500).send(errorHandler(err)));
+        .then((file) => res.send(returnsData("Download Atualizado!!", file)))
+        .catch((err) => res.status(500).send(errorHandler(err)));
     } catch (err) {
       return res.status(500).json(errorHandler(err));
     }
@@ -207,11 +207,11 @@ class DownloadsController {
 
     try {
       const downloadFromDB = await Download.findOne({
-        where: { id }
+        where: { id },
       });
 
       const downloadDelDB = await Download.destroy({
-        where: { id }
+        where: { id },
       });
       existsOrError(downloadDelDB, "Download Não encontrado!");
 
@@ -222,9 +222,9 @@ class DownloadsController {
           "fileType",
           "filePath",
           "fileSize",
-          "fileUse"
+          "fileUse",
         ],
-        where: { id: downloadFromDB.downloadUploadId }
+        where: { id: downloadFromDB.downloadUploadId },
       });
 
       if (!uploadFromDb) {
@@ -236,9 +236,9 @@ class DownloadsController {
         `download_${id}.${uploadFromDb.fileType}`
       );
 
-      fs.access(fileLocation, error => {
+      fs.access(fileLocation, (error) => {
         if (!error) {
-          fs.unlinkSync(fileLocation, function(error) {
+          fs.unlinkSync(fileLocation, function (error) {
             return res
               .status(400)
               .send(errorHandler("erro no delete do arquivo!!", error));
@@ -259,7 +259,7 @@ class DownloadsController {
     var file = req.params.file;
 
     const downloadFromDB = await Download.findOne({
-      where: { id: file }
+      where: { id: file },
     });
 
     if (!downloadFromDB) {
