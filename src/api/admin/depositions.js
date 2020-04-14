@@ -1,17 +1,28 @@
 const path = require("path");
 const { errorHandler, returnsData } = require("../../util/respHandler");
+const { querySearchEventId } = require("../../util/utils");
 const { existsOrError } = require("../../util/validation");
 const { Deposition, Event } = require("../../app/models");
 
 class DepositionsController {
   getAll(req, res) {
-    Deposition.findAll({
+    const page = parseInt(req.query.page) || 1;
+    const paginate = parseInt(req.query.limit) || 1;
+    const search = req.query.search;
+
+    const where = querySearchEventId(search, "depositionTitle");
+
+    Deposition.paginate({
+      page,
+      paginate,
+      where,
       attributes: [
         "id",
         "eventId",
         "depositionTitle",
         "depositionDescription",
-        "depositionUrlphoto",
+        "depositionUploadId",
+        "depositionFilename",
         "depositionShow",
       ],
       include: [
@@ -40,7 +51,8 @@ class DepositionsController {
         "eventId",
         "depositionTitle",
         "depositionDescription",
-        "depositionUrlphoto",
+        "depositionUploadId",
+        "depositionFilename",
         "updatedAt",
       ],
       include: [

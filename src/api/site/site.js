@@ -17,10 +17,16 @@ class siteController {
 
   getDeposition(req, res) {
     const { id } = req.params;
+    console.log(
+      path.resolve(
+        __dirname,
+        `../../assets/img/depositions/deposition_${id}.png`
+      )
+    );
     res.sendFile(
       path.resolve(
         __dirname,
-        `../../assets/img/depositions/deposition_${id}.jpg`
+        `../../assets/img/depositions/deposition_${id}.png`
       )
     );
   }

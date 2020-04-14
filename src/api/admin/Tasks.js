@@ -2,7 +2,7 @@ const { Task, TaskStatu, TaskSection, Event } = require("../../app/models");
 const { existsOrError } = require("../../util/validation");
 const { errorHandler, returnsData } = require("../../util/respHandler");
 const { Joi, celebrate, Segments } = require("celebrate");
-const { querySearchTask } = require("../../util/utils");
+const { querySearchEventId } = require("../../util/utils");
 
 class TasksController {
   async get(req, res) {
@@ -10,7 +10,7 @@ class TasksController {
     const paginate = parseInt(req.query.limit) || 1;
     const search = req.query.search;
 
-    const where = querySearchTask(search);
+    const where = querySearchEventId(search, "taskName");
 
     try {
       const resp = await Task.paginate({
