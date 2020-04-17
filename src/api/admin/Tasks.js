@@ -77,7 +77,6 @@ class TasksController {
       });
       res.status(200).send(returnsData("Tarefa Criada!!", null));
     } catch (err) {
-      console.log(err);
       return res.status(500).send(errorHandler(err));
     }
   }

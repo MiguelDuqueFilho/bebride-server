@@ -1,5 +1,7 @@
+src/depositions/*
 src/downloads/*
 src/uploads/*
+src/log/*
 .env
 .env.remote
 .env.test

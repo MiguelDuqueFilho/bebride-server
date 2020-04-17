@@ -1,5 +1,5 @@
 const path = require("path");
-
+const { Deposition } = require("../../app/models");
 class siteController {
   getBanner(req, res) {
     const i = Math.floor(Math.random() * 3) + 1;
@@ -17,17 +17,8 @@ class siteController {
 
   getDeposition(req, res) {
     const { id } = req.params;
-    console.log(
-      path.resolve(
-        __dirname,
-        `../../assets/img/depositions/deposition_${id}.png`
-      )
-    );
     res.sendFile(
-      path.resolve(
-        __dirname,
-        `../../assets/img/depositions/deposition_${id}.png`
-      )
+      path.resolve(__dirname, `../../depositions/deposition_${id}.img`)
     );
   }
   getTeam(req, res) {

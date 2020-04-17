@@ -117,7 +117,6 @@ class DownloadsController {
 
       res.status(200).send(returnsData("Consulta Realizada!!", null));
     } catch (err) {
-      console.log(err);
       return res.status(500).send(errorHandler(err));
     }
   }
@@ -147,7 +146,6 @@ class DownloadsController {
         return res.status(400).send(errorHandler(err));
       }
     } catch (err) {
-      console.log(err);
       return res.status(400).send(errorHandler(err));
     }
 
@@ -270,7 +268,6 @@ class DownloadsController {
       "src/downloads",
       `download_${file}.${filename}`
     );
-    console.log(fileLocation);
     res.download(fileLocation, downloadFromDB.downloadFilename);
   }
 }

@@ -1,8 +1,10 @@
 const path = require("path");
+const fs = require("fs");
 const { errorHandler, returnsData } = require("../../util/respHandler");
 const { querySearchEventId } = require("../../util/utils");
 const { existsOrError } = require("../../util/validation");
-const { Deposition, Event } = require("../../app/models");
+const { Joi, celebrate, Segments } = require("celebrate");
+const { Deposition, Event, Upload } = require("../../app/models");
 
 class DepositionsController {
   getAll(req, res) {
@@ -21,8 +23,9 @@ class DepositionsController {
         "eventId",
         "depositionTitle",
         "depositionDescription",
-        "depositionUploadId",
+        "uploadId",
         "depositionFilename",
+        "depositionFiletype",
         "depositionShow",
       ],
       include: [
@@ -51,8 +54,9 @@ class DepositionsController {
         "eventId",
         "depositionTitle",
         "depositionDescription",
-        "depositionUploadId",
+        "uploadId",
         "depositionFilename",
+        "depositionFiletype",
         "updatedAt",
       ],
       include: [
@@ -74,23 +78,51 @@ class DepositionsController {
 
   async save(req, res) {
     const deposition = { ...req.body };
+
     try {
-      existsOrError(deposition.depositionTitle, "Titulo não informado");
-      existsOrError(
-        deposition.depositionDescription,
-        "Descrição não informado"
-      );
-      existsOrError(deposition.depositionUrlphoto, "Filename não informado.");
-    } catch (err) {
-      return res.status(400).send(errorHandler(err));
-    }
-    try {
-      await Deposition.create({
+      const uploadFromDb = await Upload.findOne({
+        attributes: [
+          "id",
+          "fileName",
+          "fileType",
+          "filePath",
+          "fileSize",
+          "fileUse",
+        ],
+        where: { id: deposition.uploadId },
+      });
+
+      if (!uploadFromDb) {
+        return res.status(500).send(errorHandler("Foto não encontrada."));
+      }
+
+      const depositionFromDb = await Deposition.create({
+        eventId: deposition.eventId,
         depositionTitle: deposition.depositionTitle,
         depositionDescription: deposition.depositionDescription,
-        depositionUrlphoto: deposition.depositionUrlphoto,
+        uploadId: uploadFromDb.id,
+        depositionFilename: uploadFromDb.fileName,
+        depositionFiletype: uploadFromDb.fileType,
         depositionShow: deposition.depositionShow,
       });
+
+      const fileLocationOrig = uploadFromDb.filePath;
+
+      const fileLocationDest = path.join(
+        "src/depositions",
+        `deposition_${depositionFromDb.id}.img`
+      );
+
+      fs.access(fileLocationOrig, (error) => {
+        if (!error) {
+          fs.copyFileSync(fileLocationOrig, fileLocationDest);
+        } else {
+          return res
+            .status(400)
+            .send(errorHandler("Imagem não encontrada!!", error));
+        }
+      });
+
       res.status(200).send(returnsData("Depoimento incluido!!", null));
     } catch (err) {
       return res.status(500).send(errorHandler(err));
@@ -100,39 +132,57 @@ class DepositionsController {
   async update(req, res) {
     const deposition = { ...req.body };
     if (req.params.id) deposition.id = req.params.id;
+
     try {
-      const depositionFromDB = await Deposition.findOne({
+      const depositionFindDB = await Deposition.findOne({
         where: { id: deposition.id },
       });
 
-      if (!depositionFromDB) {
+      if (!depositionFindDB) {
         return res.status(500).send(errorHandler("depoimento não cadastrado"));
       }
+      const uploadFromDb = await Upload.findOne({
+        attributes: [
+          "id",
+          "fileName",
+          "fileType",
+          "filePath",
+          "fileSize",
+          "fileUse",
+        ],
+        where: { id: deposition.uploadId },
+      });
 
-      try {
-        existsOrError(deposition.depositionTitle, "Titulo não informado");
-        existsOrError(
-          deposition.depositionDescription,
-          "Descrição não informado"
-        );
-        existsOrError(
-          deposition.depositionUrlphoto,
-          "Url da foto não informado."
-        );
-      } catch (err) {
-        return res.status(400).send(errorHandler(err));
+      if (uploadFromDb) {
+        deposition.uploadId = uploadFromDb.id;
+        deposition.depositionFilename = uploadFromDb.uploadId;
+        deposition.depositionFiletype = uploadFromDb.uploadId;
+      } else {
+        return res.status(500).send(errorHandler("Foto não encontrada."));
       }
-    } catch (err) {
-      console.log(err);
-      return res.status(400).send(errorHandler(err));
-    }
 
-    try {
       await Deposition.update(deposition, {
         where: { id: deposition.id },
       });
 
-      Deposition.findAll({
+      const fileLocationOrig = uploadFromDb.filePath;
+
+      const fileLocationDest = path.join(
+        "src/depositions",
+        `deposition_${deposition.id}.img`
+      );
+
+      fs.access(fileLocationOrig, (error) => {
+        if (!error) {
+          fs.copyFileSync(fileLocationOrig, fileLocationDest);
+        } else {
+          return res
+            .status(400)
+            .send(errorHandler("Imagem não encontrada!!", error));
+        }
+      });
+
+      Deposition.findOne({
         where: { id: deposition.id },
       })
         .then((dep) => res.send(returnsData("Depoimento Atualizado!!", dep)))
@@ -146,16 +196,95 @@ class DepositionsController {
     const { id } = req.params;
 
     try {
-      const depositionFromDB = await Deposition.destroy({
+      const depositionFindDB = await Deposition.findOne({
         where: { id },
       });
-      existsOrError(depositionFromDB, "Depoimento Não encontrado!");
 
-      return res.status(200).send(returnsData("Depoimento excluido!!", null));
+      existsOrError(depositionFindDB, "Depoimento Não encontrado!");
+
+      await Deposition.destroy({
+        where: { id },
+      });
+
+      var fileLocation = path.join("src/depositions", `deposition_${id}.img`);
+
+      fs.access(fileLocation, (error) => {
+        if (!error) {
+          fs.unlinkSync(fileLocation, function (error) {
+            return res
+              .status(400)
+              .send(
+                errorHandler(
+                  "Depoimento excluido!, mas com erro no delete da foto!!",
+                  error
+                )
+              );
+          });
+          return res
+            .status(200)
+            .send(returnsData("Depoimento excluido!!", null));
+        } else {
+          return res
+            .status(400)
+            .send(errorHandler("Foto não encontrada!!", error));
+        }
+      });
     } catch (err) {
       return res.status(400).send(errorHandler(err));
     }
   }
 }
 
-module.exports = new DepositionsController();
+module.exports.deposition = new DepositionsController();
+
+const depositionBodyValidate = Joi.object().keys({
+  id: Joi.number().integer().optional().error(new Error("Id não numérico!")),
+  eventId: Joi.number()
+    .integer()
+    .required()
+    .error(new Error("Selecione um evento!")),
+  depositionTitle: Joi.string()
+    .required()
+    .error(new Error("Titulo do depoimento obrigatório!")),
+  depositionDescription: Joi.string()
+    .required()
+    .error(new Error("Descrição do depoimento obrigatório!")),
+  uploadId: Joi.number()
+    .integer()
+    .min(0)
+    .required()
+    .error(new Error("id da foto obrigatório!")),
+  depositionFilename: Joi.optional().strip(),
+  depositionFiletype: Joi.optional().strip(),
+  depositionShow: Joi.boolean()
+    .required()
+    .error(new Error("Mostrar depoimento invalido!")),
+  Events: Joi.optional().strip(),
+});
+
+const depositionParamsValidate = Joi.object().keys({
+  id: Joi.number().required().error(new Error("Id do depoimento inválido!")),
+});
+
+const depositionQueryValidate = Joi.object().keys({
+  page: Joi.number().optional().error(new Error("page deve ser numerico!")),
+  limit: Joi.number().optional().error(new Error("limit deve ser numerico!")),
+  search: Joi.optional(),
+});
+
+module.exports.getDepositionValidate = celebrate({
+  [Segments.QUERY]: depositionQueryValidate,
+});
+
+module.exports.saveDepositionValidate = celebrate({
+  [Segments.BODY]: depositionBodyValidate,
+});
+
+module.exports.updateDepositionValidate = celebrate({
+  [Segments.PARAMS]: depositionParamsValidate.required(),
+  [Segments.BODY]: depositionBodyValidate.min(2),
+});
+
+module.exports.deleteDepositionValidate = celebrate({
+  [Segments.PARAMS]: depositionParamsValidate.required(),
+});

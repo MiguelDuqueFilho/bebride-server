@@ -104,7 +104,6 @@ class EventsController {
         return res.status(400).send(errorHandler(err));
       }
     } catch (err) {
-      console.log(err);
       return res.status(400).send(errorHandler(err));
     }
 

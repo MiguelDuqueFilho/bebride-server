@@ -8,8 +8,14 @@ const users = require("../api/admin/user");
 const dashboard = require("../api/admin/Dashboard");
 const downloads = require("../api/admin/Downloads");
 const uploads = require("../api/admin/Uploads");
-const depositions = require("../api/admin/Depositions");
 const events = require("../api/admin/Events");
+const {
+  deposition,
+  getDepositionValidate,
+  saveDepositionValidate,
+  updateDepositionValidate,
+  deleteDepositionValidate,
+} = require("../api/admin/Depositions");
 const {
   task,
   getTaskValidate,
@@ -33,11 +39,31 @@ routes.post("/users", isAuthenticatedAdmin, users.save);
 
 routes.get("/dashboard", isAuthenticated, dashboard.get);
 
-routes.get("/depositions_all", isAuthenticatedAdmin, depositions.getAll);
-routes.get("/depositions", isAuthenticated, depositions.get);
-routes.post("/depositions", isAuthenticatedAdmin, depositions.save);
-routes.put("/depositions/:id", isAuthenticatedAdmin, depositions.update);
-routes.delete("/depositions/:id", isAuthenticatedAdmin, depositions.delete);
+routes.get(
+  "/depositions_all",
+  isAuthenticatedAdmin,
+  getDepositionValidate,
+  deposition.getAll
+);
+
+routes.post(
+  "/depositions",
+  isAuthenticatedAdmin,
+  saveDepositionValidate,
+  deposition.save
+);
+routes.put(
+  "/depositions/:id",
+  isAuthenticatedAdmin,
+  updateDepositionValidate,
+  deposition.update
+);
+routes.delete(
+  "/depositions/:id",
+  isAuthenticatedAdmin,
+  deleteDepositionValidate,
+  deposition.delete
+);
 
 routes.post("/uploads", isAuthenticatedAdmin, uploads.upload);
 

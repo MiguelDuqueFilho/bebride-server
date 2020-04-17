@@ -19,11 +19,14 @@ module.exports = {
       deposition_description: {
         type: Sequelize.TEXT,
       },
-      deposition_upload_id: {
+      upload_id: {
         type: Sequelize.INTEGER(11),
       },
       deposition_filename: {
         type: Sequelize.STRING(64),
+      },
+      deposition_filetype: {
+        type: Sequelize.STRING,
       },
       deposition_show: {
         type: Sequelize.BOOLEAN,

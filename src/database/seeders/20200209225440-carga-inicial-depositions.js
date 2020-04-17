@@ -8,8 +8,9 @@ module.exports = {
         deposition_title: "Assessoria incrivel",
         deposition_description:
           "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Similique consequatur cumque provident, dolorem quis autem exercitationem! Neque, modi nihil.",
-        deposition_upload_id: 0,
+        upload_id: 0,
         deposition_filename: "deposition_1.jpg",
+        deposition_filetype: "jpeg",
         deposition_show: false,
       },
     ]);

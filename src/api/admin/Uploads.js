@@ -20,8 +20,8 @@ class UploadsController {
           "fileType",
           "filePath",
           "fileSize",
-          "fileUse"
-        ]
+          "fileUse",
+        ],
       });
       resp.page = page;
       res.status(200).send(returnsData("Consulta Realizada!!", resp));
@@ -34,17 +34,33 @@ class UploadsController {
 
   async getType(req, res) {
     const { type } = req.params;
+    let where = {};
+    switch (type) {
+      case "img":
+        where = {
+          $or: [{ fileType: "jpg" }, { fileType: "jpeg" }, { fileType: "png" }],
+        };
+        break;
+      case "pdf":
+        where = {
+          fileType: "pdf",
+        };
+        break;
+      default:
+        break;
+    }
+
     try {
       const resp = await Upload.findAll({
-        where: { fileType: type, fileUse: false },
+        where,
         attributes: [
           "id",
           "fileName",
           "fileType",
           "filePath",
           "fileSize",
-          "fileUse"
-        ]
+          "fileUse",
+        ],
       });
       res.status(200).send(returnsData("Consulta Realizada!!", resp));
     } catch (error) {
@@ -64,9 +80,9 @@ class UploadsController {
           "fileType",
           "filePath",
           "fileSize",
-          "fileUse"
+          "fileUse",
         ],
-        where: { id }
+        where: { id },
       });
       res.status(200).send(returnsData("Consulta Realizada!!", resp));
     } catch (error) {
@@ -81,7 +97,7 @@ class UploadsController {
     if (req.params.id) upload.id = req.params.id;
 
     const uploadFromDB = await Upload.findOne({
-      where: { id: upload.id }
+      where: { id: upload.id },
     });
 
     if (!uploadFromDB) {
@@ -90,14 +106,14 @@ class UploadsController {
 
     try {
       await Upload.update(upload, {
-        where: { id: upload.id }
+        where: { id: upload.id },
       });
 
       Upload.findAll({
-        where: { id: upload.id }
+        where: { id: upload.id },
       })
-        .then(file => res.send(returnsData("Upload Atualizado!!", file)))
-        .catch(err => res.status(500).send(errorHandler(err)));
+        .then((file) => res.send(returnsData("Upload Atualizado!!", file)))
+        .catch((err) => res.status(500).send(errorHandler(err)));
     } catch (err) {
       return res.status(500).json(errorHandler(err));
     }
@@ -108,17 +124,17 @@ class UploadsController {
 
     try {
       const uploadFromDB = await Upload.findOne({
-        where: { id }
+        where: { id },
       });
 
       const uploadDelDB = await Upload.destroy({
-        where: { id }
+        where: { id },
       });
       existsOrError(uploadDelDB, "Upload Não encontrado!");
 
-      fs.access(uploadFromDB.filePath, error => {
+      fs.access(uploadFromDB.filePath, (error) => {
         if (!error) {
-          fs.unlinkSync(uploadFromDB.filePath, function(error) {
+          fs.unlinkSync(uploadFromDB.filePath, function (error) {
             return res
               .status(400)
               .send(errorHandler("erro no delete do arquivo!!", error));
@@ -141,7 +157,7 @@ class UploadsController {
     const options = {
       multiples: true,
       uploadDir: fileLocation,
-      keepExtensions: true
+      keepExtensions: true,
     };
 
     const form = new IncomingForm(options);
@@ -157,10 +173,10 @@ class UploadsController {
         fileType: type,
         filePath: file.path,
         fileSize: parseInt(file.size),
-        fileUse: false
+        fileUse: false,
       })
-        .then(upl => {})
-        .catch(err => console.log(err));
+        .then((upl) => {})
+        .catch((err) => console.log(err));
     });
     form.on("end", () => {
       res.json();
