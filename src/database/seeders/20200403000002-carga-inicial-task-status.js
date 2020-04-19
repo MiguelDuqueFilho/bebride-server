@@ -23,6 +23,11 @@ module.exports = {
         task_status_name: "Atrasada",
         task_status_color: "danger"
       }
+      {
+        id: 5,
+        task_status_name: "Concluída",
+        task_status_color: "secundary"
+      }
     ]);
   },
   down: (queryInterface, Sequelize) => {

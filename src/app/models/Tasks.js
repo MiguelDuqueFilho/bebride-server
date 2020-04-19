@@ -28,6 +28,13 @@ module.exports = (sequelize, DataTypes) => {
           } else {
             task.taskTime = "00:00:00";
           }
+          if (task.taskStatusId === "5") {
+            task.taskCompleted = 100;
+          } else {
+            if (task.taskCompleted === 100) {
+              task.taskStatusId = "5";
+            }
+          }
         },
       },
     }

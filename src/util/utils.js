@@ -33,7 +33,7 @@ module.exports.querySearchId = (search, param) => {
   return where;
 };
 
-module.exports.querySearchEventId = (search, param) => {
+module.exports.querySearchEventId = (search, param = "") => {
   if (typeof search === "undefined") return {};
 
   const { searchHeader, eventSelected } = JSON.parse(search);
@@ -42,12 +42,14 @@ module.exports.querySearchEventId = (search, param) => {
   let where1 = {};
   let where2 = {};
 
-  if (typeof searchHeader !== "undefined" && searchHeader !== "") {
-    const query = `%${searchHeader}%`;
-    where1 = {
-      [param]: { [Op.like]: query },
-    };
-    where = where1;
+  if (param !== "") {
+    if (typeof searchHeader !== "undefined" && searchHeader !== "") {
+      const query = `%${searchHeader}%`;
+      where1 = {
+        [param]: { [Op.like]: query },
+      };
+      where = where1;
+    }
   }
 
   if (typeof eventSelected !== "undefined") {
