@@ -9,10 +9,8 @@ class DashboardController {
 
     const where = querySearchEventId(search);
 
-    let summary = {};
-
     try {
-      const resp = await Task.findAll({
+      const respTotal = await Task.findAll({
         attributes: [
           "taskStatusId",
           [Sequelize.fn("count", Sequelize.col("task_status_id")), "taskCount"],
@@ -27,18 +25,29 @@ class DashboardController {
         raw: true,
         where,
       });
-      // chart 3
+
+      const respTaskPercent = await Task.findAll({
+        attributes: ["id", "taskName", "taskCompleted"],
+        where,
+      });
+
       let taskSummary = {};
-      if (resp) {
-        taskSummary = resp;
+      let taskPercent = {};
+
+      if (respTotal) {
+        taskSummary = respTotal;
+      }
+
+      if (respTaskPercent) {
+        taskPercent = respTaskPercent;
       }
 
       let summary = {};
       summary = { ...summary, taskSummary };
+      summary = { ...summary, taskPercent };
 
       res.status(200).send(returnsData("Consulta Realizada!!", summary));
     } catch (error) {
-      console.log(error);
       res.status(500).send(errorHandler("Erro interno lista Tasks", error));
     }
   }

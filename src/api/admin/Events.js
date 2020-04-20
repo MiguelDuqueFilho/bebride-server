@@ -15,6 +15,10 @@ class EventsController {
         page,
         paginate,
         where,
+        order: [
+          ["eventStatusId", "ASC"],
+          ["id", "DESC"],
+        ],
         include: [
           {
             model: EventType,

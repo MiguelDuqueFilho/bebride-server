@@ -33,17 +33,19 @@ class UploadsController {
   }
 
   async getType(req, res) {
-    const { type } = req.params;
     let where = {};
+    const { type } = req.params;
     switch (type) {
       case "img":
         where = {
-          $or: [{ fileType: "jpg" }, { fileType: "jpeg" }, { fileType: "png" }],
+          fileType: "jpg",
+          fileType: "jpeg",
+          fileType: "png",
         };
         break;
       case "pdf":
         where = {
-          fileType: "pdf",
+          file_type: "pdf",
         };
         break;
       default:
@@ -64,6 +66,7 @@ class UploadsController {
       });
       res.status(200).send(returnsData("Consulta Realizada!!", resp));
     } catch (error) {
+      console.log(error);
       res
         .status(500)
         .send(errorHandler("Erro na consulta de Uploads...", error));
