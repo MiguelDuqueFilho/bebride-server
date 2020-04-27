@@ -1,5 +1,6 @@
 const path = require("path");
 const fs = require("fs");
+const { Op } = require("sequelize");
 const { errorHandler, returnsData } = require("../../util/respHandler");
 const { existsOrError } = require("../../util/validation");
 const { Upload } = require("../../app/models");
@@ -38,14 +39,12 @@ class UploadsController {
     switch (type) {
       case "img":
         where = {
-          fileType: "jpg",
-          fileType: "jpeg",
-          fileType: "png",
+          fileType: { [Op.like]: "image/%" },
         };
         break;
-      case "pdf":
+      case "doc":
         where = {
-          file_type: "pdf",
+          file_type: { [Op.like]: "application/%" },
         };
         break;
       default:
@@ -155,7 +154,7 @@ class UploadsController {
   }
 
   upload(req, res) {
-    const fileLocation = path.join("src/uploads", "/");
+    const fileLocation = path.join("src/images/uploads", "/");
 
     const options = {
       multiples: true,
@@ -166,14 +165,9 @@ class UploadsController {
     const form = new IncomingForm(options);
 
     form.on("file", (field, file) => {
-      let type = file.type;
-      type = type.replace("application/", "");
-      type = type.replace("image/", "");
-      type = type.replace("video/", "");
-
       Upload.create({
         fileName: file.name,
-        fileType: type,
+        fileType: file.type,
         filePath: file.path,
         fileSize: parseInt(file.size),
         fileUse: false,

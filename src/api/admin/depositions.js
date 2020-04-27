@@ -23,9 +23,8 @@ class DepositionsController {
         "eventId",
         "depositionTitle",
         "depositionDescription",
-        "uploadId",
         "depositionFilename",
-        "depositionFiletype",
+        "uploadId",
         "depositionShow",
       ],
       include: [
@@ -46,7 +45,7 @@ class DepositionsController {
   }
   get(req, res) {
     Deposition.findAll({
-      limit: 4,
+      limit: 8,
       where: { depositionShow: true },
       order: [["updatedAt", "DESC"]],
       attributes: [
@@ -54,9 +53,8 @@ class DepositionsController {
         "eventId",
         "depositionTitle",
         "depositionDescription",
-        "uploadId",
         "depositionFilename",
-        "depositionFiletype",
+        "uploadId",
         "updatedAt",
       ],
       include: [
@@ -100,30 +98,30 @@ class DepositionsController {
         eventId: deposition.eventId,
         depositionTitle: deposition.depositionTitle,
         depositionDescription: deposition.depositionDescription,
-        uploadId: uploadFromDb.id,
-        depositionFilename: uploadFromDb.fileName,
-        depositionFiletype: uploadFromDb.fileType,
+        depositionFilename: uploadFromDb.filePath,
         depositionShow: deposition.depositionShow,
+        uploadId: uploadFromDb.id,
       });
 
       const fileLocationOrig = uploadFromDb.filePath;
 
       const fileLocationDest = path.join(
-        "src/depositions",
-        `deposition_${depositionFromDb.id}.img`
+        "src/Images/depositions",
+        `deposition_${depositionFromDb.id}${path.extname(
+          uploadFromDb.filePath
+        )}`
       );
 
       fs.access(fileLocationOrig, (error) => {
         if (!error) {
           fs.copyFileSync(fileLocationOrig, fileLocationDest);
+          res.status(200).send(returnsData("Depoimento incluido!!", null));
         } else {
           return res
             .status(400)
             .send(errorHandler("Imagem não encontrada!!", error));
         }
       });
-
-      res.status(200).send(returnsData("Depoimento incluido!!", null));
     } catch (err) {
       return res.status(500).send(errorHandler(err));
     }
@@ -141,45 +139,63 @@ class DepositionsController {
       if (!depositionFindDB) {
         return res.status(500).send(errorHandler("depoimento não cadastrado"));
       }
-      const uploadFromDb = await Upload.findOne({
-        attributes: [
-          "id",
-          "fileName",
-          "fileType",
-          "filePath",
-          "fileSize",
-          "fileUse",
-        ],
-        where: { id: deposition.uploadId },
-      });
 
-      if (uploadFromDb) {
-        deposition.uploadId = uploadFromDb.id;
-        deposition.depositionFilename = uploadFromDb.uploadId;
-        deposition.depositionFiletype = uploadFromDb.uploadId;
-      } else {
-        return res.status(500).send(errorHandler("Foto não encontrada."));
+      if (depositionFindDB.uploadId !== deposition.uploadId) {
+        const uploadFromDb = await Upload.findOne({
+          attributes: [
+            "id",
+            "fileName",
+            "fileType",
+            "filePath",
+            "fileSize",
+            "fileUse",
+          ],
+          where: { id: deposition.uploadId },
+        });
+
+        if (uploadFromDb) {
+          deposition.uploadId = uploadFromDb.id;
+          deposition.depositionFilename = uploadFromDb.filePath;
+        } else {
+          return res.status(500).send(errorHandler("Foto não encontrada."));
+        }
+
+        const fileLocationOld = path.join(
+          "src/Images/depositions",
+          `deposition_${deposition.id}${path.extname(
+            depositionFindDB.depositionFilename
+          )}`
+        );
+
+        fs.access(fileLocationOld, (error) => {
+          if (!error) {
+            fs.unlinkSync(fileLocationOld, function (error) {
+              if (error) {
+                console.log("Arquivo não deletado");
+              }
+            });
+          }
+        });
+
+        const fileLocationOrig = uploadFromDb.filePath;
+        const fileLocationDest = path.join(
+          "src/Images/depositions",
+          `deposition_${deposition.id}${path.extname(fileLocationOrig)}`
+        );
+
+        await fs.access(fileLocationOrig, (error) => {
+          if (!error) {
+            fs.copyFileSync(fileLocationOrig, fileLocationDest);
+          } else {
+            return res
+              .status(400)
+              .send(errorHandler("Imagem não encontrada!!", error));
+          }
+        });
       }
 
       await Deposition.update(deposition, {
         where: { id: deposition.id },
-      });
-
-      const fileLocationOrig = uploadFromDb.filePath;
-
-      const fileLocationDest = path.join(
-        "src/depositions",
-        `deposition_${deposition.id}.img`
-      );
-
-      fs.access(fileLocationOrig, (error) => {
-        if (!error) {
-          fs.copyFileSync(fileLocationOrig, fileLocationDest);
-        } else {
-          return res
-            .status(400)
-            .send(errorHandler("Imagem não encontrada!!", error));
-        }
       });
 
       Deposition.findOne({
@@ -206,29 +222,22 @@ class DepositionsController {
         where: { id },
       });
 
-      var fileLocation = path.join("src/depositions", `deposition_${id}.img`);
+      const fileLocation = path.join(
+        "src/Images/depositions",
+        `deposition_${id}${path.extname(depositionFindDB.depositionFilename)}`
+      );
 
       fs.access(fileLocation, (error) => {
         if (!error) {
           fs.unlinkSync(fileLocation, function (error) {
-            return res
-              .status(400)
-              .send(
-                errorHandler(
-                  "Depoimento excluido!, mas com erro no delete da foto!!",
-                  error
-                )
-              );
+            if (error) {
+              console.log("Arquivo não deletado");
+            }
           });
-          return res
-            .status(200)
-            .send(returnsData("Depoimento excluido!!", null));
-        } else {
-          return res
-            .status(400)
-            .send(errorHandler("Foto não encontrada!!", error));
         }
       });
+
+      return res.status(200).send(returnsData("Depoimento excluido!!", null));
     } catch (err) {
       return res.status(400).send(errorHandler(err));
     }
@@ -249,13 +258,14 @@ const depositionBodyValidate = Joi.object().keys({
   depositionDescription: Joi.string()
     .required()
     .error(new Error("Descrição do depoimento obrigatório!")),
+  depositionFilename: Joi.string()
+    .required()
+    .error(new Error("Nome da imagem do depoimento obrigatório!")),
   uploadId: Joi.number()
     .integer()
     .min(0)
     .required()
     .error(new Error("id da foto obrigatório!")),
-  depositionFilename: Joi.optional().strip(),
-  depositionFiletype: Joi.optional().strip(),
   depositionShow: Joi.boolean()
     .required()
     .error(new Error("Mostrar depoimento invalido!")),

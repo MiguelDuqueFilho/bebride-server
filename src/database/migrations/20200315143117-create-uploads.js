@@ -6,38 +6,41 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       file_name: {
-        type: Sequelize.STRING(128)
+        type: Sequelize.STRING(128),
+        allowNull: false,
       },
       file_type: {
-        type: Sequelize.STRING(256)
+        type: Sequelize.STRING(64),
+        allowNull: false,
       },
       file_path: {
         type: Sequelize.STRING(256),
-        allowNull: false
+        allowNull: false,
       },
       file_size: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false,
       },
       file_use: {
         type: Sequelize.BOOLEAN,
-        defaultValue: false
+        defaultValue: false,
       },
       created_at: {
         type: Sequelize.DATE,
         allowNull: false,
-        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP")
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
       updated_at: {
         type: Sequelize.DATE,
         allowNull: false,
-        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP")
-      }
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
+      },
     });
   },
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable("uploads");
-  }
+  },
 };

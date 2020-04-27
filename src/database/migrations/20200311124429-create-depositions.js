@@ -15,18 +15,18 @@ module.exports = {
       },
       deposition_title: {
         type: Sequelize.STRING(64),
+        allowNull: false,
       },
       deposition_description: {
         type: Sequelize.TEXT,
+        allowNull: false,
+      },
+      ddeposition_filename: {
+        type: Sequelize.STRING(128),
       },
       upload_id: {
         type: Sequelize.INTEGER(11),
-      },
-      deposition_filename: {
-        type: Sequelize.STRING(64),
-      },
-      deposition_filetype: {
-        type: Sequelize.STRING,
+        allowNull: false,
       },
       deposition_show: {
         type: Sequelize.BOOLEAN,

@@ -8,10 +8,9 @@ module.exports = (sequelize, DataTypes) => {
       eventId: DataTypes.INTEGER,
       depositionTitle: DataTypes.STRING,
       depositionDescription: DataTypes.TEXT,
-      uploadId: DataTypes.INTEGER,
-      depositionFilename: DataTypes.STRING,
-      depositionFiletype: DataTypes.STRING,
+      depositionFilename: DataTypes.STRING(128),
       depositionShow: DataTypes.BOOLEAN,
+      uploadId: DataTypes.INTEGER,
     },
     {}
   );

@@ -14,30 +14,30 @@ module.exports = (sequelize, DataTypes) => {
       userType: DataTypes.INTEGER,
       passwordResetToken: {
         type: String,
-        select: false
+        select: false,
       },
       remoteResetIp: {
         type: String,
-        select: false
+        select: false,
       },
-      deletedAt: DataTypes.DATE
+      deletedAt: DataTypes.DATE,
     },
     {
       hooks: {
-        beforeSave: async user => {
+        beforeSave: async (user) => {
           if (user.password) {
             user.passwordHash = await bcrypt.hash(user.password, 8);
           }
-        }
-      }
+        },
+      },
     }
   );
 
-  User.prototype.checkPassword = function(password) {
+  User.prototype.checkPassword = function (password) {
     return bcrypt.compare(password, this.passwordHash);
   };
 
-  User.prototype.generateToken = function() {
+  User.prototype.generateToken = function () {
     const now = Math.floor(Date.now() / 1000);
 
     const payload = {
@@ -46,22 +46,22 @@ module.exports = (sequelize, DataTypes) => {
       email: this.userEmail,
       type: this.userType,
       iat: now,
-      exp: now + 60 * 60 * 24 * 1 // expire 1 days
+      exp: now + 60 * 60 * 24 * 1, // expire 1 days
     };
 
     return {
       ...payload,
-      token: jwt.sign(payload, authSecret)
+      token: jwt.sign(payload, authSecret),
     };
   };
 
-  User.prototype.generateResetToken = function() {
+  User.prototype.generateResetToken = function () {
     const now = Math.floor(Date.now() / 1000);
 
     const payload = {
       id: this.id,
       iat: now,
-      exp: now + 60 * 1 // expire 1 hour
+      exp: now + 60 * 15, // expire 15 minutos
     };
 
     const secret = this.passwordHash + "-" + this.createdAt;

@@ -26,6 +26,7 @@ const {
 
 routes.get("/eventtypes", events.getTypes);
 routes.get("/eventstatus", events.getStatus);
+routes.get("/depositions", deposition.get);
 
 // Autorizados por autenticação
 

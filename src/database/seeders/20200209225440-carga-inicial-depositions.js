@@ -9,8 +9,7 @@ module.exports = {
         deposition_description:
           "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Similique consequatur cumque provident, dolorem quis autem exercitationem! Neque, modi nihil.",
         upload_id: 0,
-        deposition_filename: "deposition_1.jpg",
-        deposition_filetype: "jpeg",
+        deposition_filename: "deposition_1.jpeg",
         deposition_show: false,
       },
     ]);

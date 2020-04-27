@@ -7,13 +7,13 @@ module.exports = (sequelize, DataTypes) => {
     {
       downloadTitle: DataTypes.STRING,
       downloadDescription: DataTypes.STRING,
-      downloadFilename: DataTypes.STRING,
+      downloadFilename: DataTypes.STRING(128),
       downloadShow: DataTypes.BOOLEAN,
-      downloadUploadId: DataTypes.INTEGER
+      uploadId: DataTypes.INTEGER,
     },
     {}
   );
-  Download.associate = function(models) {
+  Download.associate = function (models) {
     // associations can be defined here
   };
 

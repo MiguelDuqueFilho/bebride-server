@@ -1,6 +1,6 @@
-src/depositions/*
+src/Files/*
+src/Images/*
 src/downloads/*
-src/uploads/*
 src/log/*
 .env
 .env.remote
