@@ -1,4 +1,6 @@
-const { Event, EventStatu, EventType } = require("../../app/models");
+const path = require("path");
+const fs = require("fs");
+const { Event, EventStatu, EventType, Upload } = require("../../app/models");
 const { existsOrError, equalsOrError } = require("../../util/validation");
 const { querySearchId } = require("../../util/utils");
 const { errorHandler, returnsData } = require("../../util/respHandler");
@@ -15,10 +17,7 @@ class EventsController {
         page,
         paginate,
         where,
-        order: [
-          ["eventStatusId", "ASC"],
-          ["id", "DESC"],
-        ],
+        order: [["id", "DESC"]],
         include: [
           {
             model: EventType,
@@ -52,6 +51,7 @@ class EventsController {
 
   async save(req, res) {
     const event = { ...req.body };
+    event.eventFilename = "NONE.jpeg";
     try {
       existsOrError(event.eventName, "Nome do evento não informado");
       existsOrError(event.eventDescription, "Descrição não informado");
@@ -61,11 +61,28 @@ class EventsController {
       existsOrError(event.eventFinish, "Data de término não informada");
       existsOrError(event.eventTypeId, "Tipo de evento não informado");
       existsOrError(event.eventStatusId, "Status do evento não informado");
+      existsOrError(event.uploadId, "id de upload não informado");
     } catch (err) {
       return res.status(400).send(errorHandler(err));
     }
     try {
-      await Event.create({
+      const uploadFromDb = await Upload.findOne({
+        attributes: [
+          "id",
+          "fileName",
+          "fileType",
+          "filePath",
+          "fileSize",
+          "fileUse",
+        ],
+        where: { id: event.uploadId },
+      });
+
+      if (!uploadFromDb) {
+        return res.status(500).send(errorHandler("Foto não encontrada."));
+      }
+
+      const eventFromDb = await Event.create({
         eventName: event.eventName,
         eventDescription: event.eventDescription,
         eventStart: event.eventStart,
@@ -74,9 +91,39 @@ class EventsController {
         eventFinish: event.eventFinish,
         eventTypeId: event.eventTypeId,
         eventStatusId: event.eventStatusId,
-        // addressId: event.addressId
+        addressId: 0,
+        eventFilename: event.eventFilename,
+        uploadId: event.uploadId,
       });
-      res.status(200).send(returnsData("Consulta Realizada!!", null));
+
+      if (!eventFromDb) {
+        return res.status(500).send(errorHandler("Evento não inserido!!"));
+      }
+
+      const fileLocationOrig = uploadFromDb.filePath;
+
+      const fileLocationDest = path.join(
+        "src/Images/events",
+        `event_${eventFromDb.id}${path.extname(uploadFromDb.filePath)}`
+      );
+
+      await Event.update(
+        { eventFilename: fileLocationDest },
+        {
+          where: { id: eventFromDb.id },
+        }
+      );
+
+      fs.access(fileLocationOrig, (error) => {
+        if (!error) {
+          fs.copyFileSync(fileLocationOrig, fileLocationDest);
+          res.status(200).send(returnsData("Evento incluido!!", null));
+        } else {
+          return res
+            .status(400)
+            .send(errorHandler("Imagem não encontrada!!", error));
+        }
+      });
     } catch (err) {
       return res.status(500).send(errorHandler(err));
     }
@@ -93,25 +140,55 @@ class EventsController {
       if (!eventFromDB) {
         return res.status(500).send(errorHandler("Evento não cadastrado"));
       }
+      if (eventFromDB.uploadId !== event.uploadId) {
+        if (
+          eventFromDB.eventFilename === null ||
+          eventFromDB.eventFilename === ""
+        ) {
+          eventFromDB.eventFilename = "NONE.jpeg";
+        }
+        event.eventFilename = "NONE.jpeg";
+        const uploadFromDb = await Upload.findOne({
+          attributes: [
+            "id",
+            "fileName",
+            "fileType",
+            "filePath",
+            "fileSize",
+            "fileUse",
+          ],
+          where: { id: event.uploadId },
+        });
+        console.log(event);
+        console.log(uploadFromDb);
 
-      try {
-        existsOrError(event.eventName, "Nome do evento não informado");
-        existsOrError(event.eventDescription, "Descrição não informado");
-        existsOrError(
-          event.eventStart,
-          "Data de inicio do evento não informada"
+        if (!uploadFromDb) {
+          return res.status(500).send(errorHandler("Foto não encontrada."));
+        }
+        console.log(eventFromDB.eventFilename);
+        fs.access(eventFromDB.eventFilename, (error) => {
+          if (!error) {
+            fs.unlinkSync(eventFromDB.eventFilename, (error) => {});
+          }
+        });
+
+        const fileLocationOrig = uploadFromDb.filePath;
+        const fileLocationDest = path.join(
+          "src/Images/events",
+          `event_${event.id}${path.extname(fileLocationOrig)}`
         );
-        existsOrError(event.eventDate, "Data do evento não informada");
-        existsOrError(event.eventStart, "Data do evento não informada");
-        existsOrError(event.eventFinish, "Data de término não informada");
-      } catch (err) {
-        return res.status(400).send(errorHandler(err));
-      }
-    } catch (err) {
-      return res.status(400).send(errorHandler(err));
-    }
+        console.log(fileLocationOrig);
+        console.log(fileLocationDest);
+        event.uploadId = uploadFromDb.id;
+        event.eventFilename = fileLocationDest;
 
-    try {
+        await fs.access(fileLocationOrig, (error) => {
+          if (!error) {
+            fs.copyFileSync(fileLocationOrig, fileLocationDest);
+          }
+        });
+      }
+
       await Event.update(event, {
         where: { id: event.id },
       });
@@ -122,6 +199,7 @@ class EventsController {
         .then((event) => res.send(returnsData("Evento Atualizado!!", event)))
         .catch((err) => res.status(500).send(errorHandler(err)));
     } catch (err) {
+      console.log(err);
       return res.status(500).json(errorHandler(err));
     }
   }
@@ -130,10 +208,25 @@ class EventsController {
     const { id } = req.params;
 
     try {
-      const eventFromDB = await Event.destroy({
+      const eventFromDB = await Event.findOne({
         where: { id },
       });
+
       existsOrError(eventFromDB, "Evento Não encontrado!");
+
+      await Event.destroy({
+        where: { id },
+      });
+      console.log(eventFromDB.eventFilename);
+      fs.access(eventFromDB.eventFilename, (error) => {
+        if (!error) {
+          fs.unlinkSync(eventFromDB.eventFilename, function (error) {
+            if (error) {
+              console.log("Arquivo não deletado");
+            }
+          });
+        }
+      });
 
       return res.status(200).send(returnsData("Evento excluido!!", null));
     } catch (err) {

@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const { promisify } = require("util");
 const { errorHandler } = require("../../util/respHandler");
 
-const authenticate = async req => {
+const authenticate = async (req) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader) {
@@ -66,5 +66,5 @@ module.exports = {
   isAuthenticated: isAuthenticate,
   isAuthenticatedAdmin: isAuthenticatedAdmin,
   isAuthenticatedClient: isAuthenticatedClient,
-  isAuthenticatedPartner: isAuthenticatedPartner
+  isAuthenticatedPartner: isAuthenticatedPartner,
 };

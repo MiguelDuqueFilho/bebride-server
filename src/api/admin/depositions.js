@@ -7,42 +7,77 @@ const { Joi, celebrate, Segments } = require("celebrate");
 const { Deposition, Event, Upload } = require("../../app/models");
 
 class DepositionsController {
-  getAll(req, res) {
+  async getAll(req, res) {
     const page = parseInt(req.query.page) || 1;
     const paginate = parseInt(req.query.limit) || 1;
     const search = req.query.search;
 
     const where = querySearchEventId(search, "depositionTitle");
-
-    Deposition.paginate({
-      page,
-      paginate,
-      where,
-      attributes: [
-        "id",
-        "eventId",
-        "depositionTitle",
-        "depositionDescription",
-        "depositionFilename",
-        "uploadId",
-        "depositionShow",
-      ],
-      include: [
-        {
-          model: Event,
-          attributes: ["eventName"],
-        },
-      ],
-    })
-      .then((dep) =>
-        res.status(200).send(returnsData("Consulta Realizada!!", dep))
-      )
-      .catch((err) =>
-        res
-          .status(500)
-          .send(errorHandler("Erro na consulta de depoimentos...", err))
-      );
+    try {
+      const resp = await Deposition.paginate({
+        page,
+        paginate,
+        where,
+        attributes: [
+          "id",
+          "eventId",
+          "depositionTitle",
+          "depositionDescription",
+          "depositionFilename",
+          "uploadId",
+          "depositionShow",
+        ],
+        include: [
+          {
+            model: Event,
+            attributes: ["eventName"],
+          },
+        ],
+      });
+      resp.page = page;
+      res.status(200).send(returnsData("Consulta Realizada!!", resp));
+    } catch (error) {
+      res
+        .status(500)
+        .send(errorHandler("Erro na consulta de depoimentos...", error));
+    }
   }
+  // getAll(req, res) {
+  //   const page = parseInt(req.query.page) || 1;
+  //   const paginate = parseInt(req.query.limit) || 1;
+  //   const search = req.query.search;
+
+  //   const where = querySearchEventId(search, "depositionTitle");
+
+  //   Deposition.paginate({
+  //     page,
+  //     paginate,
+  //     attributes: [
+  //       "id",
+  //       "eventId",
+  //       "depositionTitle",
+  //       "depositionDescription",
+  //       "depositionFilename",
+  //       "uploadId",
+  //       "depositionShow",
+  //     ],
+  //     include: [
+  //       {
+  //         model: Event,
+  //         attributes: ["eventName"],
+  //       },
+  //     ],
+  //     where,
+  //   })
+  //     .then((dep) =>
+  //       res.status(200).send(returnsData("Consulta Realizada!!", dep))
+  //     )
+  //     .catch((err) =>
+  //       res
+  //         .status(500)
+  //         .send(errorHandler("Erro na consulta de depoimentos...", err))
+  //     );
+  // }
   get(req, res) {
     Deposition.findAll({
       limit: 8,
@@ -55,6 +90,7 @@ class DepositionsController {
         "depositionDescription",
         "depositionFilename",
         "uploadId",
+        "depositionShow",
         "updatedAt",
       ],
       include: [
@@ -98,10 +134,14 @@ class DepositionsController {
         eventId: deposition.eventId,
         depositionTitle: deposition.depositionTitle,
         depositionDescription: deposition.depositionDescription,
-        depositionFilename: uploadFromDb.filePath,
+        depositionFilename: deposition.depositionFilename,
         depositionShow: deposition.depositionShow,
         uploadId: uploadFromDb.id,
       });
+
+      if (!depositionFromDb) {
+        return res.status(500).send(errorHandler("Depoimanto não inserido!!"));
+      }
 
       const fileLocationOrig = uploadFromDb.filePath;
 
@@ -110,6 +150,13 @@ class DepositionsController {
         `deposition_${depositionFromDb.id}${path.extname(
           uploadFromDb.filePath
         )}`
+      );
+
+      await Deposition.update(
+        { depositionFilename: fileLocationDest },
+        {
+          where: { id: depositionFromDb.id },
+        }
       );
 
       fs.access(fileLocationOrig, (error) => {
@@ -153,23 +200,15 @@ class DepositionsController {
           where: { id: deposition.uploadId },
         });
 
-        if (uploadFromDb) {
-          deposition.uploadId = uploadFromDb.id;
-          deposition.depositionFilename = uploadFromDb.filePath;
-        } else {
+        if (!uploadFromDb) {
           return res.status(500).send(errorHandler("Foto não encontrada."));
         }
 
-        const fileLocationOld = path.join(
-          "src/Images/depositions",
-          `deposition_${deposition.id}${path.extname(
-            depositionFindDB.depositionFilename
-          )}`
-        );
-
-        fs.access(fileLocationOld, (error) => {
+        fs.access(depositionFindDB.depositionFilename, (error) => {
           if (!error) {
-            fs.unlinkSync(fileLocationOld, function (error) {
+            fs.unlinkSync(depositionFindDB.depositionFilename, function (
+              error
+            ) {
               if (error) {
                 console.log("Arquivo não deletado");
               }
@@ -182,6 +221,9 @@ class DepositionsController {
           "src/Images/depositions",
           `deposition_${deposition.id}${path.extname(fileLocationOrig)}`
         );
+
+        deposition.uploadId = uploadFromDb.id;
+        deposition.depositionFilename = fileLocationDest;
 
         await fs.access(fileLocationOrig, (error) => {
           if (!error) {
@@ -222,14 +264,9 @@ class DepositionsController {
         where: { id },
       });
 
-      const fileLocation = path.join(
-        "src/Images/depositions",
-        `deposition_${id}${path.extname(depositionFindDB.depositionFilename)}`
-      );
-
-      fs.access(fileLocation, (error) => {
+      fs.access(depositionFindDB.depositionFilename, (error) => {
         if (!error) {
-          fs.unlinkSync(fileLocation, function (error) {
+          fs.unlinkSync(depositionFindDB.depositionFilename, function (error) {
             if (error) {
               console.log("Arquivo não deletado");
             }

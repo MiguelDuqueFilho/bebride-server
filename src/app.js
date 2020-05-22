@@ -1,9 +1,7 @@
 const express = require("express");
-// const rfs = require("rotating-file-stream");
-// const path = require("path");
 const cors = require("cors");
-const morgan = require("morgan");
-const timeScan = require("./app/middlewares/timeScan");
+
+const { morganDevColor } = require("./app/middlewares/logCustom");
 const errorCustom = require("./app/middlewares/errorCustom");
 const routesSession = require("./routes/routesSession");
 const routesAdmin = require("./routes/routesAdmin");
@@ -17,16 +15,7 @@ class AppController {
   }
 
   middlewares() {
-    // create a rotating write stream
-    // var accessLogStream = rfs.createStream("access.log", {
-    //   interval: "1d", // rotate daily
-    //   path: path.join(__dirname, "log"),
-    // });
-    // setup the logger
-    // this.express.use(morgan("combined", { stream: accessLogStream }));
-    // this.express.use(morgan("combined"));
-    this.express.use(morgan("dev"));
-    // this.express.use(timeScan);
+    this.express.use(morganDevColor);
     this.express.use(express.json());
     this.express.use(cors());
   }

@@ -21,7 +21,7 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: false,
       },
-      ddeposition_filename: {
+      deposition_filename: {
         type: Sequelize.STRING(128),
       },
       upload_id: {

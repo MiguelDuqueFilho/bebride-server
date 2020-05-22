@@ -13,7 +13,9 @@ module.exports = {
         event_finish: "2020-03-01",
         event_type_id: 1,
         event_status_id: 1,
-        address_id: null
+        address_id: null,
+        event_filename: "",
+        upload_id: 0,
       },
       {
         id: 2,
@@ -24,7 +26,7 @@ module.exports = {
         event_finish: "2020-03-01",
         event_type_id: 2,
         event_status_id: 2,
-        address_id: null
+        address_id: null,
       },
       {
         id: 3,
@@ -36,7 +38,7 @@ module.exports = {
         event_finish: "2020-03-01",
         event_type_id: 3,
         event_status_id: 3,
-        address_id: null
+        address_id: null,
       },
       {
         id: 4,
@@ -48,12 +50,12 @@ module.exports = {
         event_finish: "2020-03-01",
         event_type_id: 4,
         event_status_id: 4,
-        address_id: null
-      }
+        address_id: null,
+      },
     ]);
   },
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.bulkDelete("events", null, {});
-  }
+  },
 };
