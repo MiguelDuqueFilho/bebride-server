@@ -1,7 +1,7 @@
 {
   "name": "bebride-server",
   "version": "1.0.0",
-  "description": "Serviço da parte Administrativa da BeBride",
+  "description": "Backend BeBride",
   "main": "server.js",
   "author": "Miguel Duque Filho",
   "license": "MIT",

@@ -82,7 +82,7 @@ routes.post("/downloads", isAuthenticatedAdmin, downloads.save);
 routes.put("/downloads/:id", isAuthenticatedAdmin, downloads.update);
 routes.delete("/downloads/:id", isAuthenticatedAdmin, downloads.delete);
 
-routes.get("/events", isAuthenticatedAdmin, events.get);
+routes.get("/events", events.get);
 routes.get("/events/:id", isAuthenticatedAdmin, events.getById);
 routes.post("/events", isAuthenticatedAdmin, events.save);
 routes.put("/events/:id", isAuthenticatedAdmin, events.update);
