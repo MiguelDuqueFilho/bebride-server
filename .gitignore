@@ -5,4 +5,5 @@ src/log/*
 .env
 .env.remote
 .env.test
-node_modules
+/node_modules
+!src/Images/banners/*

@@ -1,16 +1,6 @@
-if (process.env.NODE_ENV !== "production") {
-  switch (process.env.NODE_ENV) {
-    case "development":
-      require("dotenv").config({ path: ".env" });
-      break;
-    case "test":
-      require("dotenv").config({ path: ".env.test" });
-      break;
-    default:
-      require("dotenv").config({ path: ".env" });
-      break;
-  }
-}
+require("dotenv").config({
+  path: process.env.NODE_ENV === "test" ? ".env.test" : ".env",
+});
 
 module.exports = {
   mode: process.env.NODE_ENV,
@@ -26,6 +16,6 @@ module.exports = {
   define: {
     timestamps: true,
     underscored: true,
-    underscoredAll: true
-  }
+    underscoredAll: true,
+  },
 };

@@ -1,29 +1,19 @@
-if (process.env.NODE_ENV !== "production") {
-  switch (process.env.NODE_ENV) {
-    case "development":
-      require("dotenv").config({ path: ".env" });
-      break;
-    case "test":
-      require("dotenv").config({ path: ".env.test" });
-      break;
-    default:
-      require("dotenv").config({ path: ".env" });
-      break;
-  }
-}
+require("dotenv").config({
+  path: process.env.NODE_ENV === "test" ? ".env.test" : ".env",
+});
 
 module.exports = {
   mode: process.env.NODE_ENV,
   authSecret: process.env.APP_SECRET,
   server: {
     host: process.env.SERVER_HOST,
-    port: process.env.SERVER_PORT
+    port: process.env.SERVER_PORT,
   },
   frontUrl: process.env.FRONT_URL,
   email: {
     host: process.env.EMAIL_HOST,
     port: process.env.EMAIL_PORT,
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
+    pass: process.env.EMAIL_PASS,
+  },
 };

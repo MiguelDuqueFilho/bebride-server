@@ -1,7 +1,7 @@
 const { User } = require("../../app/models");
 const { existsOrError, equalsOrError } = require("../../util/validation");
 const { errorHandler, returnsData } = require("../../util/respHandler");
-const { authSecret, frontUrl } = require("../../config/config");
+const { authSecret, frontUrl, email } = require("../../config/config");
 const jwt = require("jsonwebtoken");
 const { promisify } = require("util");
 const mailer = require("../../app/modules/mailer");
@@ -25,9 +25,9 @@ class SessionController {
       existsOrError(password, "Senha não informada");
 
       const user = await User.findOne({ where: { userEmail } });
-
+      console.log(user);
       existsOrError(user, "Usuário ou Senha inválido!!");
-
+      console.log("vai ver password");
       if (!(await user.checkPassword(password))) {
         return res.status(401).send(errorHandler("Email ou Senha inválido!"));
       }
@@ -108,7 +108,7 @@ class SessionController {
 
       const info = await mailer.sendMail({
         to: userEmail,
-        from: "miguel.duque@globo.com",
+        from: email.user,
         subject: "Esqueci minha senha",
         template: "forgot_password",
         context: { name: user.userName, link: resetPasswordUrl },
@@ -180,10 +180,9 @@ class SessionController {
 
   async sendEmail(req, res) {
     const { userName, userEmail, messageEmail } = req.body;
-
     const info = await mailer.sendMail({
-      to: userEmail,
-      from: "miguel.duque@globo.com",
+      to: email.user,
+      from: userEmail,
       subject: "Dúvidas e Sugestões",
       template: "doubts",
       context: { userName, userEmail, messageEmail },

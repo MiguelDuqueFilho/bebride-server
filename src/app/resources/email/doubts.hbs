@@ -146,7 +146,10 @@
     }
 
     .header-background {
-      background: repeat-x url(https://www.filepicker.io/api/file/wUGKTIOZTDqV2oJx5NCh) left bottom;
+      border-radius: 48px;
+      background: #c7bfe6;
+      box-shadow: 27px 27px 54px #aba4c6,
+        -27px -27px 54px #e3daff;
     }
 
     .header {
@@ -164,7 +167,7 @@
     }
 
     .header .brand a {
-      color: #464646;
+      color: #fff;
     }
 
     .body-wrap {
@@ -375,13 +378,13 @@
 <body bgcolor="#ffffff">
 
   <div align="center">
-    <table class="head-wrap w320 full-width-gmail-android" bgcolor="#9c27b0" cellpadding="0" cellspacing="0" border="0">
-      <tr>
-        <td bgcolor="#9c27b0" width="100%" height="8" valign="top">
+    <table class="head-wrap w320 full-width-gmail-android" bgcolor="#c7bfe6" cellpadding="0" cellspacing="0" border="0">
+      {{!-- <tr>
+        <td bgcolor="#a9a2c4" width="100%" height="8" valign="top">
           <div height="8">
           </div>
         </td>
-      </tr>
+      </tr> --}}
       <tr class="header-background">
         <td class="header container" align="center">
           <div class="content">
@@ -393,12 +396,12 @@
           </div>
         </td>
       </tr>
-      <tr>
-        <td bgcolor="#9c27b0" width="100%" height="8" valign="top">
+      {{!-- <tr>
+        <td bgcolor="#a9a2c4" width="100%" height="8" valign="top">
           <div height="8">
           </div>
         </td>
-      </tr>
+      </tr> --}}
     </table>
 
     <table class="body-wrap w320">
