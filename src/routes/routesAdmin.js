@@ -5,7 +5,7 @@ const {
   isAuthenticatedAdmin,
 } = require("../app/middlewares/auth");
 const users = require("../api/admin/user");
-const dashboard = require("../api/admin/Dashboard");
+const dashboard = require("../api/admin/dashboard");
 const downloads = require("../api/admin/Downloads");
 const uploads = require("../api/admin/Uploads");
 const events = require("../api/admin/Events");
