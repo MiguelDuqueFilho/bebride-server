@@ -5,5 +5,7 @@ src/log/*
 .env
 .env.remote
 .env.test
+.secret.md
 /node_modules
+bebrideserver.pem
 !src/Images/banners/*
