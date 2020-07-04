@@ -6,7 +6,7 @@ const {
 } = require("../app/middlewares/auth");
 const users = require("../api/admin/user");
 const dashboard = require("../api/admin/dashboard");
-const downloads = require("../api/admin/Downloads");
+const downloads = require("../api/admin/downloads");
 const uploads = require("../api/admin/Uploads");
 const events = require("../api/admin/Events");
 const {
@@ -15,7 +15,7 @@ const {
   saveDepositionValidate,
   updateDepositionValidate,
   deleteDepositionValidate,
-} = require("../api/admin/Depositions");
+} = require("../api/admin/depositions");
 const {
   task,
   getTaskValidate,
