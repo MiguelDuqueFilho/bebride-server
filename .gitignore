@@ -1,5 +1,4 @@
 src/Files/*
-src/Images/*
 src/downloads/*
 src/log/*
 .env
@@ -8,4 +7,3 @@ src/log/*
 .secret.md
 /node_modules
 bebrideserver.pem
-!src/Images/banners/*
