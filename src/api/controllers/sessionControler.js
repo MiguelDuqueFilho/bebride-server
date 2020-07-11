@@ -7,6 +7,10 @@ const { promisify } = require("util");
 const mailer = require("../../app/modules/mailer");
 
 class SessionController {
+  async healthcheck(req, res) {
+    return res.status(200).send("healthcheck.");
+  }
+
   async validateToken(req, res) {
     const token = req.body.token || "";
     try {
@@ -25,9 +29,9 @@ class SessionController {
       existsOrError(password, "Senha não informada");
 
       const user = await User.findOne({ where: { userEmail } });
-      console.log(user);
+
       existsOrError(user, "Usuário ou Senha inválido!!");
-      console.log("vai ver password");
+
       if (!(await user.checkPassword(password))) {
         return res.status(401).send(errorHandler("Email ou Senha inválido!"));
       }

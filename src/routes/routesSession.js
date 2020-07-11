@@ -2,6 +2,7 @@ const routes = require("express").Router();
 const { isAuthenticated } = require("../app/middlewares/auth");
 const SessionController = require("../api/controllers/sessionControler");
 
+routes.get("/healthcheck", SessionController.healthcheck);
 routes.post("/validate_token", SessionController.validateToken);
 routes.post("/login", SessionController.login);
 routes.post("/signup", SessionController.signup);

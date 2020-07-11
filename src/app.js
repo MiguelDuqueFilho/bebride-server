@@ -15,6 +15,12 @@ class AppController {
   }
 
   middlewares() {
+    // this.express.use((req, res, next) => {
+    //   if (req.protocol === "http") {
+    //     res.redirect(301, `https://${req.headers.host}${req.url}`);
+    //   }
+    //   next();
+    // });
     this.express.use(morganDevColor);
     this.express.use(express.json());
     this.express.use(cors());
@@ -24,8 +30,8 @@ class AppController {
     this.express.use("/images", express.static(__dirname + "/Images"));
     this.express.use("/files", express.static(__dirname + "/Files"));
 
-    this.express.use(routesSession);
-    this.express.use(routesAdmin);
+    this.express.use("/api", routesSession);
+    this.express.use("/api", routesAdmin);
   }
 
   handleErrors() {

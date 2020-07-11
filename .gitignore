@@ -4,6 +4,6 @@ src/log/*
 .env
 .env.test
 .env.prod
-.secret.md
+.secret.txt
 /node_modules
 bebrideserver.pem
