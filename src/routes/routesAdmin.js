@@ -7,8 +7,8 @@ const {
 const users = require("../api/admin/user");
 const dashboard = require("../api/admin/dashboard");
 const downloads = require("../api/admin/downloads");
-const uploads = require("../api/admin/Uploads");
-const events = require("../api/admin/Events");
+const uploads = require("../api/admin/uploads");
+const events = require("../api/admin/events");
 const {
   deposition,
   getDepositionValidate,
@@ -22,7 +22,7 @@ const {
   saveTaskValidate,
   updateTaskValidate,
   deleteTaskValidate,
-} = require("../api/admin/Tasks");
+} = require("../api/admin/tasks");
 
 routes.get("/eventtypes", events.getTypes);
 routes.get("/eventstatus", events.getStatus);

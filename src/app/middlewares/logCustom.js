@@ -1,7 +1,6 @@
-const path = require("path"); // or you can use the require('chalk') syntax too
+// or you can use the require('chalk') syntax too
 const morgan = require("morgan");
 const chalk = require("chalk");
-const rfs = require("rotating-file-stream");
 
 const morganDevColor = morgan(function (tokens, req, res) {
   return [
@@ -13,20 +12,6 @@ const morganDevColor = morgan(function (tokens, req, res) {
   ].join(" ");
 });
 
-// create a rotating write stream
-
-const accessLogStream = rfs.createStream("access.log", {
-  interval: "2d", // rotate daily
-  path: path.join(__dirname, "log"),
-});
-
-const morganLog = morgan("combined");
-const morganLogStream = morgan("combined", { stream: accessLogStream });
-const morganDev = morgan("dev");
-
 module.exports = {
-  morganLogStream,
-  morganDev,
-  morganLog,
   morganDevColor,
 };

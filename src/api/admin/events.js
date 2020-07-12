@@ -103,7 +103,7 @@ class EventsController {
       const fileLocationOrig = uploadFromDb.filePath;
 
       const fileLocationDest = path.join(
-        "src/Images/events",
+        "src/images/events",
         `event_${eventFromDb.id}${path.extname(uploadFromDb.filePath)}`
       );
 
@@ -174,7 +174,7 @@ class EventsController {
 
         const fileLocationOrig = uploadFromDb.filePath;
         const fileLocationDest = path.join(
-          "src/Images/events",
+          "src/images/events",
           `event_${event.id}${path.extname(fileLocationOrig)}`
         );
         console.log(fileLocationOrig);

@@ -27,8 +27,8 @@ class AppController {
   }
 
   routes() {
-    this.express.use("/images", express.static(__dirname + "/Images"));
-    this.express.use("/files", express.static(__dirname + "/Files"));
+    this.express.use("/images", express.static(__dirname + "/images"));
+    this.express.use("/files", express.static(__dirname + "/files"));
 
     this.express.use("/api", routesSession);
     this.express.use("/api", routesAdmin);

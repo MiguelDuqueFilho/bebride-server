@@ -146,7 +146,7 @@ class DepositionsController {
       const fileLocationOrig = uploadFromDb.filePath;
 
       const fileLocationDest = path.join(
-        "src/Images/depositions",
+        "src/images/depositions",
         `deposition_${depositionFromDb.id}${path.extname(
           uploadFromDb.filePath
         )}`
@@ -218,7 +218,7 @@ class DepositionsController {
 
         const fileLocationOrig = uploadFromDb.filePath;
         const fileLocationDest = path.join(
-          "src/Images/depositions",
+          "src/images/depositions",
           `deposition_${deposition.id}${path.extname(fileLocationOrig)}`
         );
 
