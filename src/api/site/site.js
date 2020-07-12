@@ -100,13 +100,6 @@ class siteController {
   //   });
   // }
 
-  getTeam(req, res) {
-    const { team } = req.params;
-    res.sendFile(
-      path.resolve(__dirname, `../../assets/img/teams/avatar_${team}.png`)
-    );
-  }
-
   // getImage(req, res) {
   //   const { name } = req.params;
   //   console.log("getImage>>>>>>>>");
