@@ -35,7 +35,7 @@ routes
   .put("/users/:id", isAuthenticatedAdmin, users.update)
   .delete("/users/:id", isAuthenticatedAdmin, users.delete);
 
-routes.get("/users", users.get);
+routes.get("/users", isAuthenticatedAdmin, users.get);
 routes.post("/users", isAuthenticatedAdmin, users.save);
 
 routes.get("/dashboard", isAuthenticated, dashboard.get);

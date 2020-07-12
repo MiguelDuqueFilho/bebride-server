@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: "Bebride Backend",
+      name: "bebride",
       script: "./src/server.js",
       env: {
         NODE_ENV: "development",
