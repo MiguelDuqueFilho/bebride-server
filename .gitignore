@@ -1,9 +1,3 @@
-src/files/*
-src/downloads/*
-src/images/depositions/*
-src/images/events/*
-src/images/teams/*
-src/images/uploads/*
 .env
 .env.test
 .env.prod
