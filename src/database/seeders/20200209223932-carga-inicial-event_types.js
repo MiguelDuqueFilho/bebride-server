@@ -1,13 +1,13 @@
-"use strict";
+'use strict';
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.bulkInsert("event_types", [
+    return queryInterface.bulkInsert('event_types', [
       {
         id: 1,
-        event_type_name: "Assessoria do Dia",
+        event_type_name: 'Assessoria do Dia',
         event_type_resumo:
-          "Nossa Assessoria do Dia foi pensada com muito carinho para atender os noivos no dia do seu evento.",
+          'Nossa Assessoria do Dia foi pensada com muito carinho para atender os noivos no dia do seu evento.',
         event_type_description: `
           Nossa **Assessoria do Dia** foi pensada com muito carinho para atender os noivos no dia do seu evento.
           Mas claro que, para tudo sair perfeito como o planejado, precisamos entender sobre seu casamento e tomar conta de alguns detalhes importantíssimos! 
@@ -28,15 +28,15 @@ module.exports = {
           * Verificação do atendimento e da satisfação dos convidados.
           * Organizar os presentes entregues no dia e a lista de agradecimentos.
         `,
-        event_type_icon: "umbrella",
+        event_type_icon: 'umbrella',
         event_type_show: 1,
-        event_type_url: "/advice_complete",
+        event_type_url: '/advice_day',
       },
       {
         id: 2,
-        event_type_name: "Assessoria Final",
+        event_type_name: 'Assessoria Final',
         event_type_resumo:
-          "O serviço de assessoria final começa a 60 dias (2 meses) antes do evento.",
+          'O serviço de assessoria final começa a 60 dias (2 meses) antes do evento.',
         event_type_description: `
           Nossa Assessoria Final é para o casal que deseja paz e sossego no final dos preparativos. Assumimos completamente o controle da organização 2 meses (60 dias) antes do evento, arrematando todo o casamento junto dos fornecedores, padrinhos e convidados com o RSVP.
           \
@@ -68,15 +68,15 @@ module.exports = {
           * Verificação do atendimento e da satisfação dos convidados.
           * Organizar os presentes entregues no dia e a lista de agradecimentos.
           `,
-        event_type_icon: "calendar-check-o",
+        event_type_icon: 'calendar-check-o',
         event_type_show: 1,
-        event_type_url: "/advice_last",
+        event_type_url: '/advice_last',
       },
       {
         id: 3,
-        event_type_name: "Assessoria Completa",
+        event_type_name: 'Assessoria Completa',
         event_type_resumo:
-          "Sinônimo de tranquilidade. <br>Nossa Assessoria Completa é um serviço desenvolvido desde o início dos preparativos.",
+          'Sinônimo de tranquilidade. <br>Nossa Assessoria Completa é um serviço desenvolvido desde o início dos preparativos.',
         event_type_description: `
         Sinônimo de Tranquilidade
          
@@ -124,15 +124,15 @@ module.exports = {
          
 
         `,
-        event_type_icon: "umbrella",
+        event_type_icon: 'umbrella',
         event_type_show: 1,
-        event_type_url: "/advice_complete",
+        event_type_url: '/advice_complete',
       },
       {
         id: 4,
-        event_type_name: "Consultoria",
+        event_type_name: 'Consultoria',
         event_type_resumo:
-          "Nossa Consultoria é o serviço ideal para o casal que deseja planejar e organizar seu próprio casamento.",
+          'Nossa Consultoria é o serviço ideal para o casal que deseja planejar e organizar seu próprio casamento.',
         event_type_description: `
         Nossa Consultoria é o serviço ideal para o casal que deseja planejar e organizar seu próprio casamento com tranquilidade. A Be Bride, após uma reunião com os noivos, desenvolve um material exclusivo, ministrado em uma consultoria de 5 horas, ensinando o casal passo a passo o que deve ser feito até o Grande Dia. Após a consultoria, nossa equipe se disponibiliza online para auxiliar o casal no que eles precisem ao longo de todo o processo até o casamento.
         *A consultoria pode ser adquirida junto com a Assessoria do Dia ou Assessoria Final – para mais informações, confira as abas desses serviços.
@@ -161,24 +161,24 @@ module.exports = {
         8. Curadoria de Fornecedores
 
         `,
-        event_type_icon: "calendar-o",
+        event_type_icon: 'calendar-o',
         event_type_show: 1,
-        event_type_url: "/advice_consulting",
+        event_type_url: '/advice_consulting',
       },
       {
         id: 5,
-        event_type_name: "Assessoria Pedido de Casamento",
+        event_type_name: 'Assessoria Pedido de Casamento',
         event_type_resumo:
-          "Nossa Assessoria para Pedido de Casamento consiste em ouvir e executar sonhos.",
+          'Nossa Assessoria para Pedido de Casamento consiste em ouvir e executar sonhos.',
         event_type_description:
-          "Nossa Assessoria para Pedido de Casamento consiste em ouvir e executar sonhos. Trazemos para o plano tangível a ideia, a tornando única e personalizada para momento do casal, tudo isso com o mais absoluto sigilo, para surpreender e encantar. Para garantir que o dia idealizado ocorra perfeitamente e com profissionalismo, esse serviço conta com 2 assessoras, acompanhando a montagem e execução.",
-        event_type_icon: "calendar",
+          'Nossa Assessoria para Pedido de Casamento consiste em ouvir e executar sonhos. Trazemos para o plano tangível a ideia, a tornando única e personalizada para momento do casal, tudo isso com o mais absoluto sigilo, para surpreender e encantar. Para garantir que o dia idealizado ocorra perfeitamente e com profissionalismo, esse serviço conta com 2 assessoras, acompanhando a montagem e execução.',
+        event_type_icon: 'calendar',
         event_type_show: 0,
-        event_type_url: "/advice_requests",
+        event_type_url: '/advice_requests',
       },
     ]);
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.bulkDelete("event_types", null, {});
+    return queryInterface.bulkDelete('event_types', null, {});
   },
 };

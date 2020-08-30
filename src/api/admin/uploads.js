@@ -1,10 +1,10 @@
-const path = require("path");
-const fs = require("fs");
-const { Op } = require("sequelize");
-const { errorHandler, returnsData } = require("../../util/respHandler");
-const { existsOrError } = require("../../util/validation");
-const { Upload } = require("../../app/models");
-const { IncomingForm } = require("formidable");
+const path = require('path');
+const fs = require('fs');
+const { Op } = require('sequelize');
+const { errorHandler, returnsData } = require('../../util/respHandler');
+const { existsOrError } = require('../../util/validation');
+const { Upload } = require('../../app/models');
+const { IncomingForm } = require('formidable');
 
 class UploadsController {
   async get(req, res) {
@@ -16,20 +16,20 @@ class UploadsController {
         page,
         paginate,
         attributes: [
-          "id",
-          "fileName",
-          "fileType",
-          "filePath",
-          "fileSize",
-          "fileUse",
+          'id',
+          'fileName',
+          'fileType',
+          'filePath',
+          'fileSize',
+          'fileUse',
         ],
       });
       resp.page = page;
-      res.status(200).send(returnsData("Consulta Realizada!!", resp));
+      res.status(200).send(returnsData('Consulta Realizada!!', resp));
     } catch (error) {
       res
         .status(500)
-        .send(errorHandler("Erro na consulta de Uploads...", error));
+        .send(errorHandler('Erro na consulta de Uploads...', error));
     }
   }
 
@@ -37,14 +37,14 @@ class UploadsController {
     let where = {};
     const { type } = req.params;
     switch (type) {
-      case "img":
+      case 'img':
         where = {
-          fileType: { [Op.like]: "image/%" },
+          fileType: { [Op.like]: 'image/%' },
         };
         break;
-      case "doc":
+      case 'doc':
         where = {
-          file_type: { [Op.like]: "application/%" },
+          file_type: { [Op.like]: 'application/%' },
         };
         break;
       default:
@@ -55,20 +55,19 @@ class UploadsController {
       const resp = await Upload.findAll({
         where,
         attributes: [
-          "id",
-          "fileName",
-          "fileType",
-          "filePath",
-          "fileSize",
-          "fileUse",
+          'id',
+          'fileName',
+          'fileType',
+          'filePath',
+          'fileSize',
+          'fileUse',
         ],
       });
-      res.status(200).send(returnsData("Consulta Realizada!!", resp));
+      res.status(200).send(returnsData('Consulta Realizada!!', resp));
     } catch (error) {
-      console.log(error);
       res
         .status(500)
-        .send(errorHandler("Erro na consulta de Uploads...", error));
+        .send(errorHandler('Erro na consulta de Uploads...', error));
     }
   }
 
@@ -77,20 +76,20 @@ class UploadsController {
     try {
       const resp = await Upload.findOne({
         attributes: [
-          "id",
-          "fileName",
-          "fileType",
-          "filePath",
-          "fileSize",
-          "fileUse",
+          'id',
+          'fileName',
+          'fileType',
+          'filePath',
+          'fileSize',
+          'fileUse',
         ],
         where: { id },
       });
-      res.status(200).send(returnsData("Consulta Realizada!!", resp));
+      res.status(200).send(returnsData('Consulta Realizada!!', resp));
     } catch (error) {
       res
         .status(500)
-        .send(errorHandler("Erro na consulta de Uploads...", error));
+        .send(errorHandler('Erro na consulta de Uploads...', error));
     }
   }
 
@@ -103,7 +102,7 @@ class UploadsController {
     });
 
     if (!uploadFromDB) {
-      return res.status(500).send(errorHandler("Upload não cadastrado"));
+      return res.status(500).send(errorHandler('Upload não cadastrado'));
     }
 
     try {
@@ -114,7 +113,7 @@ class UploadsController {
       Upload.findAll({
         where: { id: upload.id },
       })
-        .then((file) => res.send(returnsData("Upload Atualizado!!", file)))
+        .then((file) => res.send(returnsData('Upload Atualizado!!', file)))
         .catch((err) => res.status(500).send(errorHandler(err)));
     } catch (err) {
       return res.status(500).json(errorHandler(err));
@@ -132,20 +131,20 @@ class UploadsController {
       const uploadDelDB = await Upload.destroy({
         where: { id },
       });
-      existsOrError(uploadDelDB, "Upload Não encontrado!");
+      existsOrError(uploadDelDB, 'Upload Não encontrado!');
 
       fs.access(uploadFromDB.filePath, (error) => {
         if (!error) {
           fs.unlinkSync(uploadFromDB.filePath, function (error) {
             return res
               .status(400)
-              .send(errorHandler("erro no delete do arquivo!!", error));
+              .send(errorHandler('erro no delete do arquivo!!', error));
           });
-          return res.status(200).send(returnsData("Upload excluido!!", null));
+          return res.status(200).send(returnsData('Upload excluido!!', null));
         } else {
           return res
             .status(400)
-            .send(errorHandler("Arquivo não encontrado!!", error));
+            .send(errorHandler('Arquivo não encontrado!!', error));
         }
       });
     } catch (err) {
@@ -154,7 +153,7 @@ class UploadsController {
   }
 
   upload(req, res) {
-    const fileLocation = path.join("src/images/uploads", "/");
+    const fileLocation = path.join('src/images/uploads', '/');
 
     const options = {
       multiples: true,
@@ -164,7 +163,7 @@ class UploadsController {
 
     const form = new IncomingForm(options);
 
-    form.on("file", (field, file) => {
+    form.on('file', (field, file) => {
       Upload.create({
         fileName: file.name,
         fileType: file.type,
@@ -175,7 +174,7 @@ class UploadsController {
         .then((upl) => {})
         .catch((err) => console.log(err));
     });
-    form.on("end", () => {
+    form.on('end', () => {
       res.json();
     });
     form.parse(req);
